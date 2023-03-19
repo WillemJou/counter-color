@@ -1,0 +1,28 @@
+.main-container {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  flex-direction: column;
+}
+.iteration-container {
+  display: flex;
+  gap: 20px;
+  margin: 3%;
+}
+.count {
+  font-size: 10rem;
+  font-weight: bold;
+}
+.color {
+  z-index: 1;
+  position: absolute;
+  top: 15%;
+  right: 33%;
+}
+.count-container {
+  display: flex;
+}
+.btn {
+}
