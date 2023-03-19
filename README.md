@@ -2,7 +2,7 @@
 
 A simple counter that colorize numbers with random colors. Pick your favorite !
 
-![a picture of the counter color](https://github.com/[WillemJou]/[counter-color]/src/pics/twenty-nine-color.png?raw=true)
+![a picture of the counter color](src/pics/twenty-nine-color.png)
 
 ## Authors
 
