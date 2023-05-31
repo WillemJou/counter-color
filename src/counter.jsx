@@ -3,9 +3,27 @@ import './counter.css'
 
 export function Counter() {
   const [count, setCount] = useState(0)
-  const [color, setColor] = useState('Counting to color')
+  const [colors, setColor] = useState('Counting to color')
+  // const [palette, setPalette] = useState([
+  //   { nom: color },
+  //   { nom: color },
+  //   { nom: color },
+  // ])
   const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16)
 
+  const saveColors = () => {
+    localStorage.setItem('colors', JSON.stringify(colors))
+  }
+  const getColors = () => {
+    const color = localStorage.getItem('colors')
+    color == null ? [] : JSON.parse(color)
+  }
+
+  const addColor = () => {
+    const color = getColors()
+    color.push(colors)
+    saveColors(color)
+  }
   const handleSubtractOne = () => {
     setCount(count - 1)
   }
@@ -15,6 +33,7 @@ export function Counter() {
   const resetCounter = () => {
     setCount(0)
     setColor('Counting to color')
+    localStorage.clear()
   }
   const changeColor = () => {
     setColor(randomColor)
@@ -24,10 +43,25 @@ export function Counter() {
       <div className='count-container'>
         <div
           className='count'
-          style={count != 0 ? { color: color } : { color: null }}>
+          style={count != 0 ? { color: colors } : { color: null }}>
           {count}
         </div>
-        <div className='color'>{count == 0 ? 'counting to color' : color}</div>
+
+        <div
+          style={count != 0 ? { color: colors } : { color: null }}
+          className='color'>
+          {count == 0 ? null : colors}
+        </div>
+      </div>
+      <div>
+        <span>Choose wich color you wanna pick 😁</span>
+      </div>
+      <div className='choose-btn-container'>
+        {count !== 0 ? (
+          <button className='choose-btn' onClick={addColor}>
+            Choose color
+          </button>
+        ) : null}
       </div>
       <div className='iteration-container'>
         <button
@@ -48,7 +82,7 @@ export function Counter() {
         </button>
       </div>
       <button className='' onClick={resetCounter}>
-        Reset counter
+        Reset
       </button>
     </div>
   )

@@ -3,7 +3,6 @@
   position: relative;
   justify-content: center;
   align-items: center;
-  height: 50vh;
   flex-direction: column;
 }
 .iteration-container {
@@ -18,11 +17,19 @@
 .color {
   z-index: 1;
   position: absolute;
-  top: 15%;
-  right: 33%;
+  top: 43%;
+  right: 35%;
 }
 .count-container {
   display: flex;
 }
-.btn {
+.choose-btn-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+}
+.choose-btn {
+  margin: 2%;
+  height: 40px;
 }
