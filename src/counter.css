@@ -1,4 +1,4 @@
-.main-container {
+.counter-container {
   display: flex;
   position: relative;
   justify-content: center;
@@ -20,8 +20,11 @@
   top: 43%;
   right: 35%;
 }
-.count-container {
+.number-container {
   display: flex;
+}
+.btn {
+  cursor: pointer;
 }
 .choose-btn-container {
   display: flex;
@@ -32,4 +35,19 @@
 .choose-btn {
   margin: 2%;
   height: 40px;
+}
+.palette-container {
+  display: flex;
+}
+.first-color-palette,
+.second-color-palette,
+.third-color-palette {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  width: 34%;
+  height: 20px;
+}
+.close-btn {
+  margin-right: 3px;
 }
