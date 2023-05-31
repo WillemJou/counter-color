@@ -1,29 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './counter.css'
 
 export function Counter() {
   const [count, setCount] = useState(0)
-  const [colors, setColor] = useState('Counting to color')
-  // const [palette, setPalette] = useState([
-  //   { nom: color },
-  //   { nom: color },
-  //   { nom: color },
-  // ])
+  const [color, setColor] = useState([])
+  const [colors, setColors] = useState(
+    JSON.parse(localStorage.getItem('colors') || '[]')
+  )
+
+  const handleAddColor = () => {
+    setColors([...colors, color])
+  }
+  useEffect(() => {
+    localStorage.setItem('colors', JSON.stringify(colors))
+  }, [handleAddColor])
+
   const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16)
 
-  const saveColors = () => {
-    localStorage.setItem('colors', JSON.stringify(colors))
-  }
-  const getColors = () => {
-    const color = localStorage.getItem('colors')
-    color == null ? [] : JSON.parse(color)
-  }
-
-  const addColor = () => {
-    const color = getColors()
-    color.push(colors)
-    saveColors(color)
-  }
   const handleSubtractOne = () => {
     setCount(count - 1)
   }
@@ -32,7 +25,7 @@ export function Counter() {
   }
   const resetCounter = () => {
     setCount(0)
-    setColor('Counting to color')
+    setColors([])
     localStorage.clear()
   }
   const changeColor = () => {
@@ -43,14 +36,14 @@ export function Counter() {
       <div className='count-container'>
         <div
           className='count'
-          style={count != 0 ? { color: colors } : { color: null }}>
+          style={count != 0 ? { color: color } : { color: null }}>
           {count}
         </div>
 
         <div
-          style={count != 0 ? { color: colors } : { color: null }}
+          style={count != 0 ? { color: color } : { color: null }}
           className='color'>
-          {count == 0 ? null : colors}
+          {count == 0 ? null : color}
         </div>
       </div>
       <div>
@@ -58,7 +51,7 @@ export function Counter() {
       </div>
       <div className='choose-btn-container'>
         {count !== 0 ? (
-          <button className='choose-btn' onClick={addColor}>
+          <button className='choose-btn' onClick={handleAddColor}>
             Choose color
           </button>
         ) : null}
