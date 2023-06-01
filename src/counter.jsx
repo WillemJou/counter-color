@@ -7,13 +7,29 @@ export function Counter() {
   const [colors, setColors] = useState(
     JSON.parse(localStorage.getItem('colors') || '[]')
   )
+  const [deleteColor, setDeleteColor] = useState(colors)
 
   const handleAddColor = () => {
     setColors([...colors, color])
   }
+
+  const removeColor = (e) => {
+    let id = e.target.id
+    id === 'close-btn-1'
+      ? setDeleteColor(colors.splice(0, 1))
+      : id === 'close-btn-2'
+      ? setDeleteColor(colors.splice(1, 1))
+      : id === 'close-btn-3'
+      ? setDeleteColor(colors.splice(2, 1))
+      : null
+  }
   useEffect(() => {
     localStorage.setItem('colors', JSON.stringify(colors))
   }, [handleAddColor])
+
+  useEffect(() => {
+    deleteColor
+  }, [removeColor])
 
   const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16)
 
@@ -32,9 +48,6 @@ export function Counter() {
     setColor(randomColor)
   }
 
-  const closeBtn = () => {
-    return true
-  }
   return (
     <>
       <div className='counter-container'>
@@ -89,9 +102,12 @@ export function Counter() {
           <div
             className='first-color-palette'
             style={{ backgroundColor: colors[0] }}>
-            <span className='btn close-btn' onClick={closeBtn}>
+            <button
+              className='btn close-btn'
+              id='close-btn-1'
+              onClick={removeColor}>
               x
-            </span>
+            </button>
           </div>
         ) : null}
         {colors.length > 1 ? (
@@ -99,9 +115,12 @@ export function Counter() {
             className='second-color-palette'
             style={{ backgroundColor: colors[1] }}>
             {' '}
-            <span className='btn close-btn' onClick={closeBtn}>
+            <button
+              className='btn close-btn'
+              id='close-btn-2'
+              onClick={removeColor}>
               x
-            </span>
+            </button>
           </div>
         ) : null}
         {colors.length > 2 ? (
@@ -109,9 +128,12 @@ export function Counter() {
             className='third-color-palette'
             style={{ backgroundColor: colors[2] }}>
             {' '}
-            <span className='btn close-btn' onClick={closeBtn}>
+            <button
+              className='btn close-btn'
+              id='close-btn-3'
+              onClick={removeColor}>
               x
-            </span>
+            </button>
           </div>
         ) : null}
       </div>
