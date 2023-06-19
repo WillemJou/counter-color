@@ -1,3 +1,8 @@
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
 .counter-container {
   display: flex;
   position: relative;
@@ -37,16 +42,19 @@
   height: 40px;
 }
 .palette-container {
+  position: relative;
   display: flex;
 }
 .first-color-palette,
 .second-color-palette,
 .third-color-palette {
+  position: relative;
   display: flex;
   align-items: baseline;
   justify-content: flex-end;
+  margin-top: 5px;
   width: 100%;
-  height: 20px;
+  height: 50vh;
 }
 .close-btn {
   display: flex;
@@ -56,4 +64,24 @@
   padding: 0;
   width: 14px;
   height: 14px;
+}
+.color-code-container {
+  position: absolute;
+  top: 280px;
+  right: 130px;
+  background-color: buttonface;
+  padding: 4px;
+  border-radius: 4px;
+}
+.color-code {
+  cursor: pointer;
+}
+.copy-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: 20px;
+  background-color: buttonface;
 }

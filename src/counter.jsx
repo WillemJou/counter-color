@@ -2,17 +2,42 @@ import React, { useEffect, useState } from 'react'
 import './counter.css'
 
 export function Counter() {
+  // use state HOOKS
   const [count, setCount] = useState(0)
   const [color, setColor] = useState([])
   const [colors, setColors] = useState(
     JSON.parse(localStorage.getItem('colors') || '[]')
   )
   const [deleteColor, setDeleteColor] = useState(colors)
+  const [showPopup, setShowPopup] = useState(false)
 
   const handleAddColor = () => {
     setColors([...colors, color])
   }
+  const handleShowPopup = () => {
+    setShowPopup(true),
+      setTimeout(() => {
+        setShowPopup(false)
+      }, 1000)
+  }
+  // Trouver une solution plus dynamique
+  const copyColorText = (e) => {
+    let id = e.target.id
+    id === 'hexacolor-1'
+      ? navigator.clipboard.writeText(JSON.stringify(colors[0]).slice(1, -1))
+      : id === 'hexacolor-2'
+      ? navigator.clipboard.writeText(JSON.stringify(colors[1]).slice(1, -1))
+      : id === 'hexacolor-3'
+      ? navigator.clipboard.writeText(JSON.stringify(colors[2]).slice(1, -1))
+      : null
+  }
 
+  const clickHandler = (e) => {
+    handleShowPopup()
+    copyColorText(e)
+  }
+
+  // Trouver une solution plus dynamique
   const removeColor = (e) => {
     let id = e.target.id
     id === 'close-btn-1'
@@ -23,6 +48,8 @@ export function Counter() {
       ? setDeleteColor(colors.splice(2, 1))
       : null
   }
+
+  // use effect HOOKS
   useEffect(() => {
     localStorage.setItem('colors', JSON.stringify(colors))
   }, [handleAddColor])
@@ -65,7 +92,9 @@ export function Counter() {
           </div>
         </div>
         <div>
-          <span>Choose wich color you wanna pick 😁</span>
+          <span>
+            Choose your random color by counting and colorizing the world 😁
+          </span>
         </div>
         <div className='choose-btn-container'>
           {count !== 0 ? (
@@ -108,6 +137,14 @@ export function Counter() {
               onClick={removeColor}>
               x
             </button>
+            <div className='color-code-container'>
+              <span
+                id='hexacolor-1'
+                className='color-code'
+                onClick={clickHandler}>
+                {colors[0]}
+              </span>
+            </div>
           </div>
         ) : null}
         {colors.length > 1 ? (
@@ -121,6 +158,14 @@ export function Counter() {
               onClick={removeColor}>
               x
             </button>
+            <div className='color-code-container'>
+              <span
+                id='hexacolor-2'
+                className='color-code'
+                onClick={clickHandler}>
+                {colors[1]}
+              </span>
+            </div>
           </div>
         ) : null}
         {colors.length > 2 ? (
@@ -134,8 +179,17 @@ export function Counter() {
               onClick={removeColor}>
               x
             </button>
+            <div className='color-code-container'>
+              <span
+                id='hexacolor-3'
+                className='color-code'
+                onClick={clickHandler}>
+                {colors[2]}
+              </span>
+            </div>
           </div>
         ) : null}
+        {showPopup && <span className='copy-popup'>Copied 👍</span>}
       </div>
     </>
   )
