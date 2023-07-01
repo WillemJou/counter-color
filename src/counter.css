@@ -39,7 +39,9 @@
 }
 .choose-btn {
   margin: 2%;
-  height: 40px;
+  padding: 10px;
+  width: fit-content;
+  block-size: fit-content;
 }
 .palette-container {
   position: relative;
@@ -83,5 +85,16 @@
   transform: translate(-50%, -50%);
   padding: 20px;
   border-radius: 20px;
+  background-color: buttonface;
+}
+.save-palette-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+}
+a {
+  text-decoration: none;
   background-color: buttonface;
 }

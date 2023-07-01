@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Link from './link'
 import './counter.css'
 
 export function Counter() {
@@ -49,6 +50,9 @@ export function Counter() {
       : null
   }
 
+  const maximumLengthColors = () => {
+    colors.length > 3 ? colors.splice(3, 1) : null
+  }
   // use effect HOOKS
   useEffect(() => {
     localStorage.setItem('colors', JSON.stringify(colors))
@@ -125,7 +129,6 @@ export function Counter() {
           Reset
         </button>
       </div>
-
       <div className='palette-container'>
         {colors.length ? (
           <div
@@ -151,7 +154,6 @@ export function Counter() {
           <div
             className='second-color-palette'
             style={{ backgroundColor: colors[1] }}>
-            {' '}
             <button
               className='btn close-btn'
               id='close-btn-2'
@@ -169,26 +171,31 @@ export function Counter() {
           </div>
         ) : null}
         {colors.length > 2 ? (
-          <div
-            className='third-color-palette'
-            style={{ backgroundColor: colors[2] }}>
-            {' '}
-            <button
-              className='btn close-btn'
-              id='close-btn-3'
-              onClick={removeColor}>
-              x
-            </button>
-            <div className='color-code-container'>
-              <span
-                id='hexacolor-3'
-                className='color-code'
-                onClick={clickHandler}>
-                {colors[2]}
-              </span>
+          <>
+            <Link href='/pallets' className='btn save-palette-btn'>
+              Would you save this palette ?
+            </Link>
+            <div
+              className='third-color-palette'
+              style={{ backgroundColor: colors[2] }}>
+              <button
+                className='btn close-btn'
+                id='close-btn-3'
+                onClick={removeColor}>
+                x
+              </button>
+              <div className='color-code-container'>
+                <span
+                  id='hexacolor-3'
+                  className='color-code'
+                  onClick={clickHandler}>
+                  {colors[2]}
+                </span>
+              </div>
             </div>
-          </div>
+          </>
         ) : null}
+        {color.length > 3 ? maximumLengthColors() : null}
         {showPopup && <span className='copy-popup'>Copied 👍</span>}
       </div>
     </>

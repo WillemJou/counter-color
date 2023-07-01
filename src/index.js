@@ -1,13 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { Counter } from './counter'
 import reportWebVitals from './reportWebVitals'
+import Route from './routes'
+import { Counter } from './counter'
+import { PalletsPage } from './palletsPage'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <Counter />
+    <Route path='/'>
+      <Counter />
+    </Route>
+    <Route path='/pallets'>
+      <PalletsPage />
+    </Route>
   </React.StrictMode>
 )
 

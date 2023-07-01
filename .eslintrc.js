@@ -6,5 +6,5 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:react/recommended'],
   overrides: [],
   plugins: ['react'],
-  rules: {},
+  rules: { 'react/prop-types': ['off'] },
 }
