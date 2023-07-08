@@ -64,8 +64,8 @@
   justify-content: center;
   margin: 2px;
   padding: 0;
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 16px;
 }
 .color-code-container {
   position: absolute;
@@ -97,4 +97,16 @@
 a {
   text-decoration: none;
   background-color: buttonface;
+}
+
+.palette-card-container {
+  display: flex;
+}
+.color-palette-card {
+  width: 33.3%;
+}
+.palette {
+  position: absolute;
+  top: 50%;
+  left: 3%;
 }

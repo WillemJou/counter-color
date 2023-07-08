@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import Link from './link'
 import './counter.css'
 
 export function Counter() {
   // use state HOOKS
   const [count, setCount] = useState(0)
   const [color, setColor] = useState([])
+
   const [colors, setColors] = useState(
-    JSON.parse(localStorage.getItem('colors') || '[]')
+    JSON.parse(sessionStorage.getItem('colors') || '[]')
   )
+  const [palette, setPalette] = useState([])
+
   const [deleteColor, setDeleteColor] = useState(colors)
   const [showPopup, setShowPopup] = useState(false)
 
   const handleAddColor = () => {
     setColors([...colors, color])
+    setPalette([...palette, color])
+  }
+  const handleAddPalette = () => {
+    localStorage.setItem('palette', JSON.stringify(palette))
+    setColors([])
+    sessionStorage.clear()
   }
   const handleShowPopup = () => {
     setShowPopup(true),
@@ -21,6 +29,7 @@ export function Counter() {
         setShowPopup(false)
       }, 1000)
   }
+  console.log(localStorage)
   // Trouver une solution plus dynamique
   const copyColorText = (e) => {
     let id = e.target.id
@@ -42,11 +51,11 @@ export function Counter() {
   const removeColor = (e) => {
     let id = e.target.id
     id === 'close-btn-1'
-      ? setDeleteColor(colors.splice(0, 1))
+      ? setDeleteColor(colors.splice(0, 1), palette.splice(0, 1))
       : id === 'close-btn-2'
-      ? setDeleteColor(colors.splice(1, 1))
+      ? setDeleteColor(colors.splice(1, 1), palette.splice(1, 1))
       : id === 'close-btn-3'
-      ? setDeleteColor(colors.splice(2, 1))
+      ? setDeleteColor(colors.splice(2, 1), palette.splice(2, 1))
       : null
   }
 
@@ -55,8 +64,12 @@ export function Counter() {
   }
   // use effect HOOKS
   useEffect(() => {
-    localStorage.setItem('colors', JSON.stringify(colors))
+    sessionStorage.setItem('colors', JSON.stringify(colors))
   }, [handleAddColor])
+
+  useEffect(() => {
+    JSON.parse(localStorage.getItem('palette'))
+  }, [handleAddPalette])
 
   useEffect(() => {
     deleteColor
@@ -73,12 +86,11 @@ export function Counter() {
   const resetCounter = () => {
     setCount(0)
     setColors([])
-    localStorage.clear()
+    sessionStorage.clear()
   }
   const changeColor = () => {
     setColor(randomColor)
   }
-
   return (
     <>
       <div className='counter-container'>
@@ -128,6 +140,18 @@ export function Counter() {
         <button className='btn' onClick={resetCounter}>
           Reset
         </button>
+        {localStorage.length === 3 ? (
+          <div className='palette'>
+            {palette.map((item) => (
+              <div
+                key={item}
+                style={{ backgroundColor: item }}
+                className='color-palette-card'>
+                Hello World
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
       <div className='palette-container'>
         {colors.length ? (
@@ -172,9 +196,12 @@ export function Counter() {
         ) : null}
         {colors.length > 2 ? (
           <>
-            <Link href='/pallets' className='btn save-palette-btn'>
+            <button
+              href='/pallets'
+              onClick={() => handleAddPalette()}
+              className='btn save-palette-btn'>
               Would you save this palette ?
-            </Link>
+            </button>
             <div
               className='third-color-palette'
               style={{ backgroundColor: colors[2] }}>
