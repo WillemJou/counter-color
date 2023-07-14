@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Link from './link'
 import './counter.css'
 
 export function Counter() {
@@ -9,7 +10,9 @@ export function Counter() {
   const [colors, setColors] = useState(
     JSON.parse(sessionStorage.getItem('colors') || '[]')
   )
-  const [palette, setPalette] = useState([])
+  const [palette, setPalette] = useState(
+    localStorage.length == 0 ? [] : JSON.parse(localStorage.getItem('palette'))
+  )
 
   const [deleteColor, setDeleteColor] = useState(colors)
   const [showPopup, setShowPopup] = useState(false)
@@ -23,13 +26,14 @@ export function Counter() {
     setColors([])
     sessionStorage.clear()
   }
+
   const handleShowPopup = () => {
     setShowPopup(true),
       setTimeout(() => {
         setShowPopup(false)
       }, 1000)
   }
-  console.log(localStorage)
+
   // Trouver une solution plus dynamique
   const copyColorText = (e) => {
     let id = e.target.id
@@ -91,6 +95,7 @@ export function Counter() {
   const changeColor = () => {
     setColor(randomColor)
   }
+  console.log(palette)
   return (
     <>
       <div className='counter-container'>
@@ -137,22 +142,15 @@ export function Counter() {
             +1
           </button>
         </div>
-        <button className='btn' onClick={resetCounter}>
+        <button className='btn reset-btn' onClick={resetCounter}>
           Reset
         </button>
-        {localStorage.length === 3 ? (
-          <div className='palette'>
-            {palette.map((item) => (
-              <div
-                key={item}
-                style={{ backgroundColor: item }}
-                className='color-palette-card'>
-                Hello World
-              </div>
-            ))}
-          </div>
-        ) : null}
       </div>
+      {localStorage.length === 1 ? (
+        <Link href='/pallets' className='see-palette-btn'>
+          See your pallets
+        </Link>
+      ) : null}
       <div className='palette-container'>
         {colors.length ? (
           <div

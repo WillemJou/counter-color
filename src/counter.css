@@ -30,6 +30,12 @@
 }
 .btn {
   cursor: pointer;
+  border-radius: 2px;
+  border: solid 1px;
+  padding: 3px;
+}
+.reset-btn {
+  padding: 5px;
 }
 .choose-btn-container {
   display: flex;
@@ -97,16 +103,28 @@
 a {
   text-decoration: none;
   background-color: buttonface;
+  color: buttontext;
 }
 
-.palette-card-container {
+.palette-card {
   display: flex;
 }
 .color-palette-card {
   width: 33.3%;
 }
-.palette {
+.see-palette-btn {
+  position: absolute;
+  top: 5%;
+  left: 3%;
+  color: buttontext;
+  border: solid 1px;
+  padding: 8px;
+  border-radius: 2px;
+  font-size: 0.8rem;
+}
+.back-btn {
   position: absolute;
   top: 50%;
-  left: 3%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
