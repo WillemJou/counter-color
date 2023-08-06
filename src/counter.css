@@ -33,6 +33,7 @@
   border-radius: 2px;
   border: solid 1px;
   padding: 3px;
+  background-color: buttonface;
 }
 .reset-btn {
   padding: 5px;
@@ -86,9 +87,9 @@
 }
 .copy-popup {
   position: absolute;
-  top: 50%;
+  top: 20%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -20%);
   padding: 20px;
   border-radius: 20px;
   background-color: buttonface;
@@ -127,4 +128,8 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.palette-title {
+  display: flex;
+  justify-content: space-between;
 }

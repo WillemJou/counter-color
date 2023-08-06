@@ -10,6 +10,7 @@ export function Counter() {
   const [colors, setColors] = useState(
     JSON.parse(sessionStorage.getItem('colors') || '[]')
   )
+
   const [palette, setPalette] = useState(
     localStorage.length == 0 ? [] : JSON.parse(localStorage.getItem('palette'))
   )
@@ -21,12 +22,12 @@ export function Counter() {
     setColors([...colors, color])
     setPalette([...palette, color])
   }
+  console.log(palette)
   const handleAddPalette = () => {
     localStorage.setItem('palette', JSON.stringify(palette))
     setColors([])
     sessionStorage.clear()
   }
-
   const handleShowPopup = () => {
     setShowPopup(true),
       setTimeout(() => {
@@ -63,8 +64,8 @@ export function Counter() {
       : null
   }
 
-  const maximumLengthColors = () => {
-    colors.length > 3 ? colors.splice(3, 1) : null
+  const maximumLength = (item) => {
+    item.length > 3 ? item.splice(3, 1) : null
   }
   // use effect HOOKS
   useEffect(() => {
@@ -95,7 +96,6 @@ export function Counter() {
   const changeColor = () => {
     setColor(randomColor)
   }
-  console.log(palette)
   return (
     <>
       <div className='counter-container'>
@@ -146,7 +146,7 @@ export function Counter() {
           Reset
         </button>
       </div>
-      {localStorage.length === 1 ? (
+      {localStorage.length >= 1 ? (
         <Link href='/pallets' className='see-palette-btn'>
           See your pallets
         </Link>
@@ -220,7 +220,7 @@ export function Counter() {
             </div>
           </>
         ) : null}
-        {color.length > 3 ? maximumLengthColors() : null}
+        {color.length > 3 ? maximumLength(colors) : null}
         {showPopup && <span className='copy-popup'>Copied 👍</span>}
       </div>
     </>
