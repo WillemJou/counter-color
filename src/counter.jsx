@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import Link from './link'
-import './counter.css'
 
 export function Counter() {
   // use state HOOKS
   const [count, setCount] = useState(0)
   const [color, setColor] = useState([])
-
   const [colors, setColors] = useState(
     JSON.parse(sessionStorage.getItem('colors') || '[]')
   )
-
   const [palette, setPalette] = useState(
-    localStorage.length == 0 ? [] : JSON.parse(localStorage.getItem('palette'))
+    JSON.parse(localStorage.getItem('palette') || '[]')
   )
-
   const [deleteColor, setDeleteColor] = useState(colors)
   const [showPopup, setShowPopup] = useState(false)
 
+  const maximumLength = (item) => {
+    item.splice(3, 1)
+  }
   const handleAddColor = () => {
     setColors([...colors, color])
-    setPalette([...palette, color])
   }
-  console.log(palette)
   const handleAddPalette = () => {
-    localStorage.setItem('palette', JSON.stringify(palette))
-    setColors([])
+    setPalette([...palette, ...colors])
     sessionStorage.clear()
+    setColors([])
   }
   const handleShowPopup = () => {
     setShowPopup(true),
@@ -64,16 +61,14 @@ export function Counter() {
       : null
   }
 
-  const maximumLength = (item) => {
-    item.length > 3 ? item.splice(3, 1) : null
-  }
   // use effect HOOKS
   useEffect(() => {
+    maximumLength(colors)
     sessionStorage.setItem('colors', JSON.stringify(colors))
   }, [handleAddColor])
 
   useEffect(() => {
-    JSON.parse(localStorage.getItem('palette'))
+    localStorage.setItem('palette', JSON.stringify(palette))
   }, [handleAddPalette])
 
   useEffect(() => {
@@ -96,6 +91,8 @@ export function Counter() {
   const changeColor = () => {
     setColor(randomColor)
   }
+  console.log(colors)
+  console.log(palette)
   return (
     <>
       <div className='counter-container'>
@@ -220,7 +217,6 @@ export function Counter() {
             </div>
           </>
         ) : null}
-        {color.length > 3 ? maximumLength(colors) : null}
         {showPopup && <span className='copy-popup'>Copied 👍</span>}
       </div>
     </>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Link from './link'
-import './counter.css'
 
 export const PalletsPage = () => {
   /**
@@ -13,7 +12,6 @@ export const PalletsPage = () => {
       acc[idx] = [...(acc[idx] || []), x]
       return acc
     }, [])
-
   const [deletePallette, setDeletePallete] = useState(
     localStorage.length == 0
       ? []
@@ -26,6 +24,7 @@ export const PalletsPage = () => {
       ? setDeletePallete(deletePallette.filter((el) => el !== children))
       : []
   }
+  console.log(deletePallette)
 
   useEffect(() => {
     const flatGroupArr = deletePallette.flat()
