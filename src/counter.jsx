@@ -105,7 +105,7 @@ export function Counter() {
     <>
       <div className='container space-y-9'>
         <div className='space-y-6'>
-          <h1 className='text-2xl border-b-4 '>
+          <h1 className='text-2xl border-b-4 mt-9'>
             Choose your random color by counting and colorizing the world 😁
           </h1>
           {palette.length > 2 ? (
