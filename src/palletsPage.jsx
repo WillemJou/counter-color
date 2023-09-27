@@ -24,7 +24,6 @@ export const PalletsPage = () => {
       ? setDeletePallete(deletePallette.filter((el) => el !== children))
       : []
   }
-  console.log(deletePallette)
 
   useEffect(() => {
     const flatGroupArr = deletePallette.flat()

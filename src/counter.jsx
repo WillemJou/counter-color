@@ -12,7 +12,8 @@ export function Counter() {
     JSON.parse(localStorage.getItem('palette') || '[]')
   )
   const [deleteColor, setDeleteColor] = useState(colors)
-  const [showPopup, setShowPopup] = useState(false)
+  const [showCopiedPopup, setShowCopiedPopup] = useState(false)
+  const [showLimitPopup, setShowLimitPopup] = useState(false)
 
   const maximumLength = (item) => {
     item.splice(3, 1)
@@ -25,11 +26,17 @@ export function Counter() {
     sessionStorage.clear()
     setColors([])
   }
-  const handleShowPopup = () => {
-    setShowPopup(true),
-      setTimeout(() => {
-        setShowPopup(false)
-      }, 1000)
+  const handleShowCopiedPopup = () => {
+    setShowCopiedPopup(true)
+    setTimeout(() => {
+      setShowCopiedPopup(false)
+    }, 1000)
+  }
+  const handleShowLimitPopup = () => {
+    setShowLimitPopup(true)
+    setTimeout(() => {
+      setShowLimitPopup(false)
+    }, 2500)
   }
 
   // Trouver une solution plus dynamique
@@ -44,9 +51,12 @@ export function Counter() {
       : null
   }
 
-  const clickHandler = (e) => {
-    handleShowPopup()
+  const clickHandleCopy = (e) => {
+    handleShowCopiedPopup()
     copyColorText(e)
+  }
+  const clickHandleLimit = () => {
+    handleShowLimitPopup()
   }
 
   // Trouver une solution plus dynamique
@@ -91,133 +101,137 @@ export function Counter() {
   const changeColor = () => {
     setColor(randomColor)
   }
-  console.log(colors)
-  console.log(palette)
   return (
     <>
-      <div className='counter-container'>
-        <div className='number-container'>
-          <div
-            className='count'
-            style={count != 0 ? { color: color } : { color: null }}>
-            {count}
-          </div>
-
-          <div
-            style={count != 0 ? { color: color } : { color: null }}
-            className='color'>
-            {count == 0 ? null : color}
-          </div>
-        </div>
-        <div>
-          <span>
+      <div className='container space-y-9'>
+        <div className='space-y-6'>
+          <h1 className='text-2xl border-b-4 '>
             Choose your random color by counting and colorizing the world 😁
-          </span>
-        </div>
-        <div className='choose-btn-container'>
-          {count !== 0 ? (
-            <button className='btn choose-btn' onClick={handleAddColor}>
-              Choose color
-            </button>
+          </h1>
+          {palette.length > 2 ? (
+            <Link href='/pallets'>See your pallets</Link>
           ) : null}
-        </div>
-        <div className='iteration-container'>
-          <button
-            className='btn'
-            onClick={() => {
-              handleSubtractOne()
-              changeColor()
-            }}>
-            -1
-          </button>
-          <button
-            className='btn'
-            onClick={() => {
-              handleAddOne()
-              changeColor()
-            }}>
-            +1
-          </button>
-        </div>
-        <button className='btn reset-btn' onClick={resetCounter}>
-          Reset
-        </button>
-      </div>
-      {localStorage.length >= 1 ? (
-        <Link href='/pallets' className='see-palette-btn'>
-          See your pallets
-        </Link>
-      ) : null}
-      <div className='palette-container'>
-        {colors.length ? (
-          <div
-            className='first-color-palette'
-            style={{ backgroundColor: colors[0] }}>
-            <button
-              className='btn close-btn'
-              id='close-btn-1'
-              onClick={removeColor}>
-              x
-            </button>
-            <div className='color-code-container'>
-              <span
-                id='hexacolor-1'
-                className='color-code'
-                onClick={clickHandler}>
-                {colors[0]}
+          <div className='flex space-x-14'>
+            <div className=' flex text-2xl space-x-3'>
+              <span className='text-6xl'>{count}</span>
+              <div className='text-lg'>{count == 0 ? null : color}</div>
+            </div>
+            {count !== 0
+              ? [
+                  <button
+                    key={'key1'}
+                    onClick={() => {
+                      handleAddColor(), clickHandleLimit()
+                    }}>
+                    Choose this color
+                  </button>,
+                  <div
+                    key={'key2'}
+                    className='w-full'
+                    style={{ backgroundColor: color }}></div>,
+                ]
+              : null}
+          </div>
+          {showLimitPopup && colors.length > 3 && (
+            <div className='flex justify-center'>
+              <span className=' text-red-400 border-b-2 border-red-500'>
+                Sorry, you can only create a 3 colors palette
               </span>
             </div>
-          </div>
-        ) : null}
-        {colors.length > 1 ? (
-          <div
-            className='second-color-palette'
-            style={{ backgroundColor: colors[1] }}>
+          )}
+          <div className='flex space-x-4 text-xl'>
             <button
-              className='btn close-btn'
-              id='close-btn-2'
-              onClick={removeColor}>
-              x
+              onClick={() => {
+                handleSubtractOne()
+                changeColor()
+              }}>
+              -1
             </button>
-            <div className='color-code-container'>
-              <span
-                id='hexacolor-2'
-                className='color-code'
-                onClick={clickHandler}>
-                {colors[1]}
-              </span>
+            <button
+              onClick={() => {
+                handleAddOne()
+                changeColor()
+              }}>
+              +1
+            </button>
+          </div>
+        </div>
+        <div className='flex flex-col'>
+          <div className='flex justify-between space-x-2'>
+            <div className='flex flex-col grow relative'>
+              {colors.length ? (
+                <div
+                  className='flex justify-between'
+                  style={{ backgroundColor: colors[0] }}>
+                  <span
+                    className='p-2 cursor-pointer'
+                    id='hexacolor-1'
+                    onClick={clickHandleCopy}>
+                    {colors[0]}
+                  </span>
+                  {showCopiedPopup && (
+                    <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                      Copied 👍
+                    </span>
+                  )}
+                  <button
+                    className='p-2'
+                    id='close-btn-1'
+                    onClick={removeColor}>
+                    x
+                  </button>
+                </div>
+              ) : null}
+              {colors.length > 1 ? (
+                <div
+                  className='flex justify-between'
+                  style={{ backgroundColor: colors[1] }}>
+                  <span
+                    id='hexacolor-2'
+                    className='p-2 cursor-pointer'
+                    onClick={clickHandleCopy}>
+                    {colors[1]}
+                  </span>
+
+                  <button
+                    className='p-2'
+                    id='close-btn-2'
+                    onClick={removeColor}>
+                    x
+                  </button>
+                </div>
+              ) : null}
+              {colors.length > 2 ? (
+                <>
+                  <div
+                    className='flex justify-between'
+                    style={{ backgroundColor: colors[2] }}>
+                    <span
+                      className='p-2 cursor-pointer'
+                      id='hexacolor-3'
+                      onClick={clickHandleCopy}>
+                      {colors[2]}
+                    </span>
+                    <button
+                      className='p-2'
+                      id='close-btn-3'
+                      onClick={removeColor}>
+                      x
+                    </button>
+                  </div>
+                </>
+              ) : null}
             </div>
-          </div>
-        ) : null}
-        {colors.length > 2 ? (
-          <>
-            <button
-              href='/pallets'
-              onClick={() => handleAddPalette()}
-              className='btn save-palette-btn'>
-              Would you save this palette ?
-            </button>
-            <div
-              className='third-color-palette'
-              style={{ backgroundColor: colors[2] }}>
-              <button
-                className='btn close-btn'
-                id='close-btn-3'
-                onClick={removeColor}>
-                x
+            {colors.length > 2 ? (
+              <button href='/pallets' onClick={() => handleAddPalette()}>
+                Would you save this palette ?
               </button>
-              <div className='color-code-container'>
-                <span
-                  id='hexacolor-3'
-                  className='color-code'
-                  onClick={clickHandler}>
-                  {colors[2]}
-                </span>
-              </div>
-            </div>
-          </>
-        ) : null}
-        {showPopup && <span className='copy-popup'>Copied 👍</span>}
+            ) : null}
+          </div>
+        </div>
+        <div className='flex justify-center'>
+          <button onClick={resetCounter}>Reset</button>
+        </div>
       </div>
     </>
   )
