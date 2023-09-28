@@ -51,11 +51,11 @@ export function Counter() {
       : null
   }
 
-  const clickHandleCopy = (e) => {
+  const handleCopy = (e) => {
     handleShowCopiedPopup()
     copyColorText(e)
   }
-  const clickHandleLimit = () => {
+  const handleLimit = () => {
     handleShowLimitPopup()
   }
 
@@ -108,7 +108,7 @@ export function Counter() {
           <h1 className='text-2xl border-b-4 mt-9'>
             Choose your random color by counting and colorizing the world 😁
           </h1>
-          {palette.length > 2 ? (
+          {palette.length ? (
             <Link href='/pallets'>See your pallets</Link>
           ) : null}
           <div className='flex space-x-14'>
@@ -121,7 +121,7 @@ export function Counter() {
                   <button
                     key={'key1'}
                     onClick={() => {
-                      handleAddColor(), clickHandleLimit()
+                      handleAddColor(), handleLimit()
                     }}>
                     Choose this color
                   </button>,
@@ -132,13 +132,13 @@ export function Counter() {
                 ]
               : null}
           </div>
-          {showLimitPopup && colors.length > 3 && (
-            <div className='flex justify-center'>
-              <span className=' text-red-400 border-b-2 border-red-500'>
+          <div className=' relative flex justify-center'>
+            {showLimitPopup && colors.length > 3 && (
+              <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-400 border-b-2 border-red-500'>
                 Sorry, you can only create a 3 colors palette
               </span>
-            </div>
-          )}
+            )}
+          </div>
           <div className='flex space-x-4 text-xl'>
             <button
               onClick={() => {
@@ -166,7 +166,7 @@ export function Counter() {
                   <span
                     className='p-2 cursor-pointer'
                     id='hexacolor-1'
-                    onClick={clickHandleCopy}>
+                    onClick={handleCopy}>
                     {colors[0]}
                   </span>
                   {showCopiedPopup && (
@@ -189,7 +189,7 @@ export function Counter() {
                   <span
                     id='hexacolor-2'
                     className='p-2 cursor-pointer'
-                    onClick={clickHandleCopy}>
+                    onClick={handleCopy}>
                     {colors[1]}
                   </span>
 
@@ -209,7 +209,7 @@ export function Counter() {
                     <span
                       className='p-2 cursor-pointer'
                       id='hexacolor-3'
-                      onClick={clickHandleCopy}>
+                      onClick={handleCopy}>
                       {colors[2]}
                     </span>
                     <button
@@ -222,11 +222,14 @@ export function Counter() {
                 </>
               ) : null}
             </div>
-            {colors.length > 2 ? (
-              <button href='/pallets' onClick={() => handleAddPalette()}>
-                Would you save this palette ?
-              </button>
-            ) : null}
+            <button
+              href='/pallets'
+              className={`${
+                colors.length > 2 ? 'w-20' : ' text-transparent w-0 opacity-0'
+              } relative duration-500 transition-width ease-in-out`}
+              onClick={() => handleAddPalette()}>
+              Would you save this palette ?
+            </button>
           </div>
         </div>
         <div className='flex justify-center'>
