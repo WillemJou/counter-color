@@ -37,36 +37,38 @@ export const PalletsPage = () => {
 
   return (
     <>
-      {localStorage.palette != '[]'
-        ? deletePallette.map((children, index) => (
-            <div className='container' key={index}>
-              <div className='palette-title'>
-                palette {index}
-                <button
-                  id={children}
-                  onClick={(e) => removePalette(e, children)}
-                  className='close-btn btn'>
-                  x
-                </button>
+      <div className='container mt-9'>
+        <Link className='flex justify-end' href='/'>
+          Back to counter
+        </Link>
+        {localStorage.palette != '[]'
+          ? deletePallette.map((children, index) => (
+              <div className='my-5' key={index}>
+                <div className='border-b-4 flex justify-between'>
+                  palette {index}
+                  <button
+                    id={children}
+                    onClick={(e) => removePalette(e, children)}
+                    className='close-btn btn'>
+                    x
+                  </button>
+                </div>
+                <div key={index} className=''>
+                  {children != []
+                    ? children.map((x, i) => (
+                        <div
+                          key={i}
+                          style={{ backgroundColor: x }}
+                          className='color-palette-card'>
+                          <span className=''>Hello World</span>
+                        </div>
+                      ))
+                    : null}
+                </div>
               </div>
-              <div key={index} className='palette-card'>
-                {children != []
-                  ? children.map((x, i) => (
-                      <div
-                        key={i}
-                        style={{ backgroundColor: x }}
-                        className='color-palette-card'>
-                        Hello World
-                      </div>
-                    ))
-                  : null}
-              </div>
-            </div>
-          ))
-        : 'no pallets added'}
-      <Link className='btn back-btn' href='/'>
-        Back to counter
-      </Link>
+            ))
+          : 'no pallets added'}
+      </div>
     </>
   )
 }

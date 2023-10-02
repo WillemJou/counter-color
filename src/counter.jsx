@@ -39,7 +39,7 @@ export function Counter() {
     }, 2500)
   }
 
-  // Trouver une solution plus dynamique
+  // Trouver une solution plus maintenable et dynamique !
   const copyColorText = (e) => {
     let id = e.target.id
     id === 'hexacolor-1'
@@ -48,7 +48,7 @@ export function Counter() {
       ? navigator.clipboard.writeText(JSON.stringify(colors[1]).slice(1, -1))
       : id === 'hexacolor-3'
       ? navigator.clipboard.writeText(JSON.stringify(colors[2]).slice(1, -1))
-      : null
+      : navigator.clipboard.writeText(JSON.stringify(color).slice(1, -1))
   }
 
   const handleCopy = (e) => {
@@ -111,24 +111,30 @@ export function Counter() {
           {palette.length ? (
             <Link href='/pallets'>See your pallets</Link>
           ) : null}
-          <div className='flex space-x-14'>
-            <div className=' flex text-2xl space-x-3'>
+          <div className='flex'>
+            <div className='flex text-2xl space-x-3  w-52'>
               <span className='text-6xl'>{count}</span>
-              <div className='text-lg'>{count == 0 ? null : color}</div>
+              <span onClick={handleCopy} className='text-lg cursor-pointer'>
+                {count == 0 ? null : color}
+              </span>
             </div>
             {count !== 0
               ? [
-                  <button
-                    key={'key1'}
-                    onClick={() => {
-                      handleAddColor(), handleLimit()
-                    }}>
-                    Choose this color
-                  </button>,
-                  <div
-                    key={'key2'}
-                    className='w-full'
-                    style={{ backgroundColor: color }}></div>,
+                  <div key={'key1'} className='flex w-full'>
+                    <button
+                      key={'key1'}
+                      className='border rounded-sm p-2'
+                      onClick={() => {
+                        handleAddColor(), handleLimit()
+                      }}>
+                      Choose this color
+                    </button>
+
+                    <div
+                      key={'key2'}
+                      className='w-full'
+                      style={{ backgroundColor: color }}></div>
+                  </div>,
                 ]
               : null}
           </div>
@@ -156,9 +162,12 @@ export function Counter() {
             </button>
           </div>
         </div>
-        <div className='flex flex-col'>
-          <div className='flex justify-between space-x-2'>
-            <div className='flex flex-col grow relative'>
+        <div className='flex flex-col mb-8 h-32'>
+          <div className='flex justify-between'>
+            <div
+              className={`${
+                colors.length > 2 ? 'w-11/12' : 'w-full'
+              } flex flex-col relative ease-out duration-500`}>
               {colors.length ? (
                 <div
                   className='flex justify-between'
@@ -222,18 +231,27 @@ export function Counter() {
                 </>
               ) : null}
             </div>
-            <button
-              href='/pallets'
+            <div
               className={`${
-                colors.length > 2 ? 'w-20' : ' text-transparent w-0 opacity-0'
-              } relative duration-500 transition-width ease-in-out`}
-              onClick={() => handleAddPalette()}>
-              Would you save this palette ?
-            </button>
+                colors.length > 2 ? 'w-44 border rounded-sm' : 'w-0 border-none'
+              } flex  items-center relative ease-out duration-500`}>
+              <button
+                href='/pallets'
+                className={`${
+                  colors.length > 2
+                    ? 'text-opacity-100 opacity-100'
+                    : 'text-transparent opacity-0'
+                } relative ease-out duration-100 h-3/5 p-2`}
+                onClick={() => handleAddPalette()}>
+                Would you save this palette ?
+              </button>
+            </div>
           </div>
         </div>
         <div className='flex justify-center'>
-          <button onClick={resetCounter}>Reset</button>
+          <button className='border rounded-sm p-2' onClick={resetCounter}>
+            Reset
+          </button>
         </div>
       </div>
     </>
