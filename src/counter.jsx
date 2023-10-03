@@ -105,13 +105,20 @@ export function Counter() {
     <>
       <div className='container space-y-9'>
         <div className='space-y-6'>
-          <h1 className='text-2xl border-b-4 mt-9'>
-            Choose your random color by counting and colorizing the world 😁
+          <h1 className=' max-w-fit text-2xl border-b-4 mt-9'>
+            Choose your random color by counting and colorize the world 😁
           </h1>
           {palette.length ? (
-            <Link href='/pallets'>See your pallets</Link>
+            <Link className='' href='/pallets'>
+              <span
+                className='flex relative max-w-fit after:absolute after:top after:left hover:after:content-[""] 
+                after:border-b after:border-transparent hover:after:translate-x-6 hover:after:-left-6 hover:after:duration-500 
+                after:w-28 hover:after:h-6 hover:after:border-neutral-300'>
+                See your pallets
+              </span>
+            </Link>
           ) : null}
-          <div className='flex'>
+          <div className='flex justify-between'>
             <div className='flex text-2xl space-x-3  w-52'>
               <span className='text-6xl'>{count}</span>
               <span onClick={handleCopy} className='text-lg cursor-pointer'>
@@ -120,20 +127,21 @@ export function Counter() {
             </div>
             {count !== 0
               ? [
-                  <div key={'key1'} className='flex w-full'>
+                  <div key={'key1'} className='flex w-3/4'>
                     <button
                       key={'key1'}
-                      className='border rounded-sm p-2'
+                      className='rounded-sm transform duration-700 border border-transparent hover:border hover:border-neutral-300 p-2'
                       onClick={() => {
                         handleAddColor(), handleLimit()
                       }}>
                       Choose this color
                     </button>
-
                     <div
                       key={'key2'}
                       className='w-full'
-                      style={{ backgroundColor: color }}></div>
+                      style={{ backgroundColor: color }}>
+                      {' '}
+                    </div>
                   </div>,
                 ]
               : null}
@@ -233,15 +241,15 @@ export function Counter() {
             </div>
             <div
               className={`${
-                colors.length > 2 ? 'w-44 border rounded-sm' : 'w-0 border-none'
-              } flex  items-center relative ease-out duration-500`}>
+                colors.length > 2
+                  ? 'w-44 border rounded-sm opacity-100'
+                  : 'w-0 opacity-0 border-none'
+              } flex  items-center relative ease-out duration-300`}>
               <button
                 href='/pallets'
                 className={`${
-                  colors.length > 2
-                    ? 'text-opacity-100 opacity-100'
-                    : 'text-transparent opacity-0'
-                } relative ease-out duration-100 h-3/5 p-2`}
+                  colors.length > 2 ? 'text-opacity-100' : 'text-transparent'
+                } relative ease-out duration-0 h-3/5 p-2`}
                 onClick={() => handleAddPalette()}>
                 Would you save this palette ?
               </button>
@@ -249,7 +257,9 @@ export function Counter() {
           </div>
         </div>
         <div className='flex justify-center'>
-          <button className='border rounded-sm p-2' onClick={resetCounter}>
+          <button
+            className='rounded-sm transform duration-700 border border-transparent hover:border hover:border-neutral-300 p-2'
+            onClick={resetCounter}>
             Reset
           </button>
         </div>
