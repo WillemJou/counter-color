@@ -104,7 +104,7 @@ export function Counter() {
   return (
     <>
       <div className='container space-y-9'>
-        <div className='space-y-6'>
+        <div className='space-y-6 h-2/4'>
           <h1 className=' max-w-fit text-2xl border-b-4 mt-9'>
             Choose your random color by counting and colorize the world 😁
           </h1>
@@ -118,8 +118,8 @@ export function Counter() {
               </span>
             </Link>
           ) : null}
-          <div className='flex justify-between'>
-            <div className='flex text-2xl space-x-3  w-52'>
+          <div className='flex justify-between h-20'>
+            <div className='flex text-2xl space-x-3 w-52'>
               <span className='text-6xl'>{count}</span>
               <span onClick={handleCopy} className='text-lg cursor-pointer'>
                 {count == 0 ? null : color}
@@ -155,6 +155,7 @@ export function Counter() {
           </div>
           <div className='flex space-x-4 text-xl'>
             <button
+              className='rounded-xl p-1 transform duration-700 border border-transparent hover:border hover:border-neutral-300'
               onClick={() => {
                 handleSubtractOne()
                 changeColor()
@@ -162,6 +163,7 @@ export function Counter() {
               -1
             </button>
             <button
+              className='rounded-xl p-1 transform duration-700 border border-transparent hover:border hover:border-neutral-300'
               onClick={() => {
                 handleAddOne()
                 changeColor()
@@ -242,14 +244,16 @@ export function Counter() {
             <div
               className={`${
                 colors.length > 2
-                  ? 'w-44 border rounded-sm opacity-100'
-                  : 'w-0 opacity-0 border-none'
-              } flex  items-center relative ease-out duration-300`}>
+                  ? 'w-44 rounded-sm opacity-100 duration-300 hover:border hover:duration-700'
+                  : 'w-0 opacity-0'
+              } flex items-center relative ease-out  `}>
               <button
                 href='/pallets'
                 className={`${
-                  colors.length > 2 ? 'text-opacity-100' : 'text-transparent'
-                } relative ease-out duration-0 h-3/5 p-2`}
+                  colors.length > 2
+                    ? 'text-opacity-100 duration-0'
+                    : 'text-transparent'
+                } relative ease-out  h-3/5 p-2`}
                 onClick={() => handleAddPalette()}>
                 Would you save this palette ?
               </button>

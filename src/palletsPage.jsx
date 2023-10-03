@@ -38,13 +38,18 @@ export const PalletsPage = () => {
   return (
     <>
       <div className='container mt-9'>
-        <Link className='flex justify-end' href='/'>
-          Back to counter
+        <Link className='flex justify-end mb-8' href='/'>
+          <span
+            className='flex relative max-w-fit after:absolute after:top after:left hover:after:content-[""] 
+                after:border-b after:border-transparent hover:after:translate-x-6 hover:after:-left-6 hover:after:duration-500 
+                after:w-28 hover:after:h-6 hover:after:border-neutral-300'>
+            Back to counter
+          </span>
         </Link>
         {localStorage.palette != '[]'
           ? deletePallette.map((children, index) => (
-              <div className='my-5' key={index}>
-                <div className='border-b-4 flex justify-between'>
+              <div className='my-5 border rounded-sm' key={index}>
+                <div className='flex px-2 justify-between'>
                   palette {index}
                   <button
                     id={children}
@@ -59,7 +64,7 @@ export const PalletsPage = () => {
                         <div
                           key={i}
                           style={{ backgroundColor: x }}
-                          className='color-palette-card'>
+                          className='px-2'>
                           <span className=''>Hello World</span>
                         </div>
                       ))
