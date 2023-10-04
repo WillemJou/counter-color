@@ -118,10 +118,21 @@ export function Counter() {
               </span>
             </Link>
           ) : null}
-          <div className='flex justify-between h-20'>
-            <div className='flex text-2xl space-x-3 w-52'>
-              <span className='text-6xl'>{count}</span>
-              <span onClick={handleCopy} className='text-lg cursor-pointer'>
+          <div
+            className={`${
+              count >= 100
+                ? 'flex-col space-y-7'
+                : 'flex justify-between h-28 mt-7'
+            }`}>
+            <div className='flex relative text-2xl space-x-3 w-60'>
+              <span className='text-8xl'>{count}</span>
+              <span
+                onClick={handleCopy}
+                className={`${
+                  count !== 0
+                    ? 'hover:after:flex hover:after:content-[""] after:border-b after:border-transparent hover:after:translate-x-2 hover:after:duration-500 hover:after:border-neutral-300 after:w-20 before:w-4 before:inline-block before:content-[url("/src/pics/copy-solid.svg")] before:opacity-0 hover:before:opacity-100'
+                    : 'hover:before:content-[""]'
+                } text-lg cursor-pointer h-8`}>
                 {count == 0 ? null : color}
               </span>
             </div>
@@ -142,6 +153,11 @@ export function Counter() {
                       style={{ backgroundColor: color }}>
                       {' '}
                     </div>
+                    {showCopiedPopup && (
+                      <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                        Copied 👍
+                      </span>
+                    )}
                   </div>,
                 ]
               : null}
@@ -153,7 +169,7 @@ export function Counter() {
               </span>
             )}
           </div>
-          <div className='flex space-x-4 text-xl'>
+          <div className='flex space-x-4 text-5xl'>
             <button
               className='rounded-xl p-1 transform duration-700 border border-transparent hover:border hover:border-neutral-300'
               onClick={() => {
@@ -183,7 +199,8 @@ export function Counter() {
                   className='flex justify-between'
                   style={{ backgroundColor: colors[0] }}>
                   <span
-                    className='p-2 cursor-pointer'
+                    className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
+                     hover:after:inline-block hover:after:w-3'
                     id='hexacolor-1'
                     onClick={handleCopy}>
                     {colors[0]}
@@ -207,7 +224,8 @@ export function Counter() {
                   style={{ backgroundColor: colors[1] }}>
                   <span
                     id='hexacolor-2'
-                    className='p-2 cursor-pointer'
+                    className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
+                                 hover:after:inline-block hover:after:w-3'
                     onClick={handleCopy}>
                     {colors[1]}
                   </span>
@@ -226,7 +244,8 @@ export function Counter() {
                     className='flex justify-between'
                     style={{ backgroundColor: colors[2] }}>
                     <span
-                      className='p-2 cursor-pointer'
+                      className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
+                                 hover:after:inline-block hover:after:w-3'
                       id='hexacolor-3'
                       onClick={handleCopy}>
                       {colors[2]}
@@ -253,7 +272,7 @@ export function Counter() {
                   colors.length > 2
                     ? 'text-opacity-100 duration-0'
                     : 'text-transparent'
-                } relative ease-out  h-3/5 p-2`}
+                } relative ease-out h-full p-2`}
                 onClick={() => handleAddPalette()}>
                 Would you save this palette ?
               </button>
