@@ -17,9 +17,7 @@ AND
 
 ## Features
 
-Welcome everyone !
-
 Here is a funny little application allowing the creation of color palettes randomly, using a counter.
-It is possible to copy the hexadecimal code of the color by clicking on it, create palettes of up to three colors and save them for reuse later.
+it is possible to change the color code (hexadecimal or rgb) and to copy the code when user clicking on it, and also create palettes of up to three colors for saving them to reuse later.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

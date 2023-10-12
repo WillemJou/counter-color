@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import Link from './link'
+import {
+  hexToRgb,
+  maximumLength,
+  randomHexa,
+  randomRgb,
+  rgbToHex,
+} from './utils'
 
 export function Counter() {
   // use state HOOKS
+  const [toggleCodeColor, setToggleCodeColor] = useState(false)
   const [count, setCount] = useState(0)
-  const [color, setColor] = useState([])
+  let [color, setColor] = useState(randomHexa)
   const [colors, setColors] = useState(
     JSON.parse(sessionStorage.getItem('colors') || '[]')
   )
@@ -15,14 +23,12 @@ export function Counter() {
   const [showCopiedPopup, setShowCopiedPopup] = useState(false)
   const [showLimitPopup, setShowLimitPopup] = useState(false)
 
-  const maximumLength = (item) => {
-    item.splice(3, 1)
-  }
   const handleAddColor = () => {
     setColors([...colors, color])
   }
   const handleAddPalette = () => {
     setPalette([...palette, ...colors])
+    setCount(0)
     sessionStorage.clear()
     setColors([])
   }
@@ -71,6 +77,26 @@ export function Counter() {
       : null
   }
 
+  const handleHexToRgb = () => {
+    setToggleCodeColor(!toggleCodeColor)
+  }
+
+  const changeRandomColor = () => {
+    toggleCodeColor ? setColor(randomRgb()) : setColor(randomHexa())
+  }
+
+  const handleSubtractOne = () => {
+    setCount(count - 1)
+  }
+
+  const handleAddOne = () => {
+    setCount(count + 1)
+  }
+  const resetCounter = () => {
+    setCount(0)
+    setColors([])
+    sessionStorage.clear()
+  }
   // use effect HOOKS
   useEffect(() => {
     maximumLength(colors)
@@ -85,22 +111,12 @@ export function Counter() {
     deleteColor
   }, [removeColor])
 
-  const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16)
-
-  const handleSubtractOne = () => {
-    setCount(count - 1)
-  }
-  const handleAddOne = () => {
-    setCount(count + 1)
-  }
-  const resetCounter = () => {
-    setCount(0)
-    setColors([])
-    sessionStorage.clear()
-  }
-  const changeColor = () => {
-    setColor(randomColor)
-  }
+  useEffect(() => {
+    toggleCodeColor
+      ? setColor(hexToRgb(color.replace('#', '')))
+      : setColor(rgbToHex(color))
+    console.log(rgbToHex(color))
+  }, [toggleCodeColor])
   return (
     <>
       <div className='container space-y-9'>
@@ -126,19 +142,21 @@ export function Counter() {
             }`}>
             <div className='flex relative text-2xl space-x-3 w-60'>
               <span className='text-8xl'>{count}</span>
-              <span
-                onClick={handleCopy}
-                className={`${
-                  count !== 0
-                    ? 'hover:after:flex hover:after:content-[""] after:border-b after:border-transparent hover:after:translate-x-2 hover:after:duration-500 hover:after:border-neutral-300 after:w-20 before:w-4 before:inline-block before:content-[url("/src/pics/copy-solid.svg")] before:opacity-0 hover:before:opacity-100'
-                    : 'hover:before:content-[""]'
-                } text-lg cursor-pointer h-8`}>
-                {count == 0 ? null : color}
-              </span>
+              <div className='flex whitespace-nowrap'>
+                <span
+                  onClick={handleCopy}
+                  className={`${
+                    count !== 0
+                      ? ' before:whitespace-pre before:w-4 before:inline-block before:content-[url("/src/pics/copy-solid.svg")] before:opacity-0 hover:before:opacity-100'
+                      : 'hover:before:content-[""]'
+                  } text-sm cursor-pointer h-8`}>
+                  {count !== 0 ? color : null}
+                </span>
+              </div>
             </div>
             {count !== 0
               ? [
-                  <div key={'key1'} className='flex w-3/4'>
+                  <div key={'key1'} className='flex w-full'>
                     <button
                       key={'key1'}
                       className='rounded-sm transform duration-700 border border-transparent hover:border hover:border-neutral-300 p-2'
@@ -173,22 +191,20 @@ export function Counter() {
             <button
               className='rounded-xl p-1 transform duration-700 border border-transparent hover:border hover:border-neutral-300'
               onClick={() => {
-                handleSubtractOne()
-                changeColor()
+                handleSubtractOne(), changeRandomColor()
               }}>
               -1
             </button>
             <button
               className='rounded-xl p-1 transform duration-700 border border-transparent hover:border hover:border-neutral-300'
               onClick={() => {
-                handleAddOne()
-                changeColor()
+                handleAddOne(), changeRandomColor()
               }}>
               +1
             </button>
           </div>
         </div>
-        <div className='flex flex-col mb-8 h-32'>
+        <div className='flex flex-col justify-center mb-8 h-36'>
           <div className='flex justify-between'>
             <div
               className={`${
@@ -278,6 +294,13 @@ export function Counter() {
               </button>
             </div>
           </div>
+          <button
+            onClick={handleHexToRgb}
+            className='flex relative max-w-fit after:absolute after:top after:left hover:after:content-[""] 
+                after:border-b after:border-transparent hover:after:translate-x-6 hover:after:-left-6 hover:after:duration-500 
+                after:w-64 hover:after:h-6 hover:after:border-neutral-300'>
+            Do you wanna switch to rgb code ?
+          </button>
         </div>
         <div className='flex justify-center'>
           <button
