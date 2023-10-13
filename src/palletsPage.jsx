@@ -12,12 +12,13 @@ export const PalletsPage = () => {
       acc[idx] = [...(acc[idx] || []), x]
       return acc
     }, [])
+
   const [deletePallette, setDeletePallete] = useState(
     localStorage.length == 0
       ? []
       : group(JSON.parse(localStorage.getItem('palette')), 3)
   )
-  // modifier le LS en ajoutant le nouveau group deleteItem au LS et en supprimant l'ancienne palette LS
+
   const removePalette = (e, children) => {
     let id = e.target.id
     id.includes(children)
@@ -27,11 +28,17 @@ export const PalletsPage = () => {
 
   useEffect(() => {
     const flatGroupArr = deletePallette.flat()
+
     localStorage.setItem('updatePalette', JSON.stringify(flatGroupArr))
+
     const newPalette = JSON.parse(localStorage.getItem('updatePalette'))
+
     localStorage.removeItem('palette')
+
     localStorage.setItem('palette', JSON.stringify(newPalette))
+
     localStorage.removeItem('updatePalette')
+
     JSON.parse(localStorage.getItem('palette'))
   }, [removePalette])
 
@@ -49,23 +56,22 @@ export const PalletsPage = () => {
         {localStorage.palette != '[]'
           ? deletePallette.map((children, index) => (
               <div className='my-5 border rounded-sm' key={index}>
-                <div className='flex px-2 justify-between'>
-                  palette {index}
+                <div className='flex px-2 justify-between text-lg'>
+                  palette {index + 1}
                   <button
                     id={children}
-                    onClick={(e) => removePalette(e, children)}
-                    className='close-btn btn'>
+                    onClick={(e) => removePalette(e, children)}>
                     x
                   </button>
                 </div>
-                <div key={index} className=''>
+                <div key={index}>
                   {children != []
                     ? children.map((x, i) => (
                         <div
                           key={i}
                           style={{ backgroundColor: x }}
-                          className='px-2'>
-                          <span className=''>Hello World</span>
+                          className='py-2 px-2'>
+                          <span>{x}</span>
                         </div>
                       ))
                     : null}

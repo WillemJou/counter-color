@@ -8,18 +8,19 @@ import {
   rgbToHex,
 } from './utils'
 
+// Refacto le code en épurant la partie fonction et state du composant
+
 export function Counter() {
   // use state HOOKS
   const [toggleCodeColor, setToggleCodeColor] = useState(false)
   const [count, setCount] = useState(0)
   let [color, setColor] = useState(randomHexa)
-  const [colors, setColors] = useState(
+  let [colors, setColors] = useState(
     JSON.parse(sessionStorage.getItem('colors') || '[]')
   )
   const [palette, setPalette] = useState(
     JSON.parse(localStorage.getItem('palette') || '[]')
   )
-  const [deleteColor, setDeleteColor] = useState(colors)
   const [showCopiedPopup, setShowCopiedPopup] = useState(false)
   const [showLimitPopup, setShowLimitPopup] = useState(false)
 
@@ -44,45 +45,17 @@ export function Counter() {
       setShowLimitPopup(false)
     }, 2500)
   }
+  // Trouver endroit sympa où mettre la fonction
+  const preventSameColor = () => (colors = [...new Set(colors)])
+  preventSameColor()
 
-  // Trouver une solution plus maintenable et dynamique !
-  const copyColorText = (e) => {
-    let id = e.target.id
-    id === 'hexacolor-1'
-      ? navigator.clipboard.writeText(JSON.stringify(colors[0]).slice(1, -1))
-      : id === 'hexacolor-2'
-      ? navigator.clipboard.writeText(JSON.stringify(colors[1]).slice(1, -1))
-      : id === 'hexacolor-3'
-      ? navigator.clipboard.writeText(JSON.stringify(colors[2]).slice(1, -1))
-      : navigator.clipboard.writeText(JSON.stringify(color).slice(1, -1))
-  }
-
-  const handleCopy = (e) => {
-    handleShowCopiedPopup()
-    copyColorText(e)
-  }
   const handleLimit = () => {
     handleShowLimitPopup()
   }
 
-  // Trouver une solution plus dynamique
-  const removeColor = (e) => {
-    let id = e.target.id
-    id === 'close-btn-1'
-      ? setDeleteColor(colors.splice(0, 1), palette.splice(0, 1))
-      : id === 'close-btn-2'
-      ? setDeleteColor(colors.splice(1, 1), palette.splice(1, 1))
-      : id === 'close-btn-3'
-      ? setDeleteColor(colors.splice(2, 1), palette.splice(2, 1))
-      : null
-  }
-
-  const handleHexToRgb = () => {
-    setToggleCodeColor(!toggleCodeColor)
-  }
-
-  const changeRandomColor = () => {
-    toggleCodeColor ? setColor(randomRgb()) : setColor(randomHexa())
+  const handleCopy = (e, children) => {
+    handleShowCopiedPopup()
+    copyColorText(e, children, setColors(colors))
   }
 
   const handleSubtractOne = () => {
@@ -92,11 +65,35 @@ export function Counter() {
   const handleAddOne = () => {
     setCount(count + 1)
   }
+
+  const handleHexToRgb = () => {
+    setToggleCodeColor(!toggleCodeColor)
+  }
+
+  const copyColorText = (e, children) => {
+    let id = e.target.id
+    id === children
+      ? navigator.clipboard.writeText(JSON.stringify(children))
+      : navigator.clipboard.writeText(JSON.stringify(color))
+  }
+
+  const removeColor = (e, children) => {
+    const id = e.target.id
+    id.includes(children)
+      ? setColors(colors.filter((el) => el !== children))
+      : []
+  }
+
+  const changeRandomColor = () => {
+    toggleCodeColor ? setColor(randomRgb()) : setColor(randomHexa())
+  }
+
   const resetCounter = () => {
     setCount(0)
     setColors([])
     sessionStorage.clear()
   }
+
   // use effect HOOKS
   useEffect(() => {
     maximumLength(colors)
@@ -107,16 +104,14 @@ export function Counter() {
     localStorage.setItem('palette', JSON.stringify(palette))
   }, [handleAddPalette])
 
-  useEffect(() => {
-    deleteColor
-  }, [removeColor])
-
+  // refacto le hook de toggle des codes couleurs
   useEffect(() => {
     toggleCodeColor
-      ? setColor(hexToRgb(color.replace('#', '')))
-      : setColor(rgbToHex(color))
-    console.log(rgbToHex(color))
+      ? (setColor(hexToRgb(color.replace('#', ''))),
+        setColors(colors.map((v) => hexToRgb(v.replace('#', '')))))
+      : (setColor(rgbToHex(color)), setColors(colors.map((v) => rgbToHex(v))))
   }, [toggleCodeColor])
+
   return (
     <>
       <div className='container space-y-9'>
@@ -144,7 +139,7 @@ export function Counter() {
               <span className='text-8xl'>{count}</span>
               <div className='flex whitespace-nowrap'>
                 <span
-                  onClick={handleCopy}
+                  onClick={(e) => handleCopy(e)}
                   className={`${
                     count !== 0
                       ? ' before:whitespace-pre before:w-4 before:inline-block before:content-[url("/src/pics/copy-solid.svg")] before:opacity-0 hover:before:opacity-100'
@@ -156,9 +151,9 @@ export function Counter() {
             </div>
             {count !== 0
               ? [
-                  <div key={'key1'} className='flex w-full'>
+                  <div key={'key0'} className='flex w-full'>
                     <button
-                      key={'key1'}
+                      id={color}
                       className='rounded-sm transform duration-700 border border-transparent hover:border hover:border-neutral-300 p-2'
                       onClick={() => {
                         handleAddColor(), handleLimit()
@@ -210,72 +205,39 @@ export function Counter() {
               className={`${
                 colors.length > 2 ? 'w-11/12' : 'w-full'
               } flex flex-col relative ease-out duration-500`}>
-              {colors.length ? (
+              {/* refacto code */}
+              {colors.map((children, index) => (
                 <div
+                  id={children}
+                  key={index + 'container' + children}
                   className='flex justify-between'
-                  style={{ backgroundColor: colors[0] }}>
+                  style={{ backgroundColor: children }}>
                   <span
+                    key={index + 'copyIcon' + children}
+                    id={children.key}
                     className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
                      hover:after:inline-block hover:after:w-3'
-                    id='hexacolor-1'
-                    onClick={handleCopy}>
-                    {colors[0]}
+                    onClick={(e) => handleCopy(e)}>
+                    {children}
                   </span>
                   {showCopiedPopup && (
-                    <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                    <span
+                      key={index + 'CopiedPopup' + children}
+                      className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
                       Copied 👍
                     </span>
                   )}
                   <button
+                    key={index + 'closeBtn' + children}
+                    id={children}
                     className='p-2'
-                    id='close-btn-1'
-                    onClick={removeColor}>
+                    onClick={(e) => removeColor(e, children)}>
                     x
                   </button>
                 </div>
-              ) : null}
-              {colors.length > 1 ? (
-                <div
-                  className='flex justify-between'
-                  style={{ backgroundColor: colors[1] }}>
-                  <span
-                    id='hexacolor-2'
-                    className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
-                                 hover:after:inline-block hover:after:w-3'
-                    onClick={handleCopy}>
-                    {colors[1]}
-                  </span>
-
-                  <button
-                    className='p-2'
-                    id='close-btn-2'
-                    onClick={removeColor}>
-                    x
-                  </button>
-                </div>
-              ) : null}
-              {colors.length > 2 ? (
-                <>
-                  <div
-                    className='flex justify-between'
-                    style={{ backgroundColor: colors[2] }}>
-                    <span
-                      className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
-                                 hover:after:inline-block hover:after:w-3'
-                      id='hexacolor-3'
-                      onClick={handleCopy}>
-                      {colors[2]}
-                    </span>
-                    <button
-                      className='p-2'
-                      id='close-btn-3'
-                      onClick={removeColor}>
-                      x
-                    </button>
-                  </div>
-                </>
-              ) : null}
+              ))}
             </div>
+
             <div
               className={`${
                 colors.length > 2
@@ -294,13 +256,17 @@ export function Counter() {
               </button>
             </div>
           </div>
-          <button
-            onClick={handleHexToRgb}
-            className='flex relative max-w-fit after:absolute after:top after:left hover:after:content-[""] 
+          {count != 0 ? (
+            <button
+              onClick={handleHexToRgb}
+              className='flex relative max-w-fit text-sm after:absolute after:top after:left hover:after:content-[""] 
                 after:border-b after:border-transparent hover:after:translate-x-6 hover:after:-left-6 hover:after:duration-500 
-                after:w-64 hover:after:h-6 hover:after:border-neutral-300'>
-            Do you wanna switch to rgb code ?
-          </button>
+                after:w-60 hover:after:h-6 hover:after:border-neutral-300'>
+              {toggleCodeColor
+                ? 'Do you wanna switch to hexa code ?'
+                : 'Do you wanna switch to rgb code ?'}
+            </button>
+          ) : null}
         </div>
         <div className='flex justify-center'>
           <button
