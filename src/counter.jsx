@@ -12,7 +12,7 @@ import {
 
 export function Counter() {
   // use state HOOKS
-  const [toggleCodeColor, setToggleCodeColor] = useState(false)
+
   const [count, setCount] = useState(0)
   let [color, setColor] = useState(randomHexa)
   let [colors, setColors] = useState(
@@ -21,6 +21,8 @@ export function Counter() {
   const [palette, setPalette] = useState(
     JSON.parse(localStorage.getItem('palette') || '[]')
   )
+  const [toggleCodeColor, setToggleCodeColor] = useState(false)
+  const [stop, setStop] = useState(false)
   const [showCopiedPopup, setShowCopiedPopup] = useState(false)
   const [showLimitPopup, setShowLimitPopup] = useState(false)
 
@@ -45,9 +47,8 @@ export function Counter() {
       setShowLimitPopup(false)
     }, 2500)
   }
-  // Trouver endroit sympa où mettre la fonction
-  const preventSameColor = () => (colors = [...new Set(colors)])
-  preventSameColor()
+  // PK les fonctions fonctionnent seulement dans le scope globale ???
+  maximumLength(colors)
 
   const handleLimit = () => {
     handleShowLimitPopup()
@@ -67,6 +68,7 @@ export function Counter() {
   }
 
   const handleHexToRgb = () => {
+    setStop(true)
     setToggleCodeColor(!toggleCodeColor)
   }
 
@@ -91,12 +93,13 @@ export function Counter() {
   const resetCounter = () => {
     setCount(0)
     setColors([])
+    setToggleCodeColor(false)
     sessionStorage.clear()
   }
 
   // use effect HOOKS
+
   useEffect(() => {
-    maximumLength(colors)
     sessionStorage.setItem('colors', JSON.stringify(colors))
   }, [handleAddColor])
 
@@ -104,12 +107,35 @@ export function Counter() {
     localStorage.setItem('palette', JSON.stringify(palette))
   }, [handleAddPalette])
 
-  // refacto le hook de toggle des codes couleurs
   useEffect(() => {
-    toggleCodeColor
-      ? (setColor(hexToRgb(color.replace('#', ''))),
-        setColors(colors.map((v) => hexToRgb(v.replace('#', '')))))
-      : (setColor(rgbToHex(color)), setColors(colors.map((v) => rgbToHex(v))))
+    const hex = '#'
+    const rgb = 'rgb'
+
+    const changeCodeColor = () => {
+      toggleCodeColor && color.includes(hex)
+        ? setColor(hexToRgb(color.replace(hex, '')))
+        : toggleCodeColor && color.includes(rgb)
+        ? setColor(rgbToHex(color))
+        : !toggleCodeColor && color.includes(hex)
+        ? setColor(hexToRgb(color.replace(hex, '')))
+        : !toggleCodeColor && color.includes(rgb)
+        ? setColor(rgbToHex(color))
+        : null
+    }
+
+    const changeCodeColors = () => {
+      toggleCodeColor && colors.includes(hex)
+        ? setColors(colors.map((v) => hexToRgb(v.replace(hex, ''))))
+        : toggleCodeColor && colors.includes(rgb)
+        ? setColors(colors.map((v) => rgbToHex(v)))
+        : !toggleCodeColor && colors.includes(hex)
+        ? setColors(colors.map((v) => hexToRgb(v.replace(hex, ''))))
+        : !toggleCodeColor && colors.includes(rgb)
+        ? setColors(colors.map((v) => rgbToHex(v)))
+        : null
+    }
+
+    stop ? (changeCodeColors(), changeCodeColor()) : null
   }, [toggleCodeColor])
 
   return (
@@ -117,7 +143,7 @@ export function Counter() {
       <div className='container space-y-9'>
         <div className='space-y-6 h-2/4'>
           <h1 className=' max-w-fit text-2xl border-b-4 mt-9'>
-            Choose your random color by counting and colorize the world 😁
+            Choose your random pallets by counting and colorize the world 😁
           </h1>
           {palette.length ? (
             <Link className='' href='/pallets'>
@@ -175,7 +201,13 @@ export function Counter() {
                 ]
               : null}
           </div>
+
           <div className=' relative flex justify-center'>
+            {colors.includes('color') && showLimitPopup && (
+              <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-400 border-b-2 border-red-500'>
+                Sorry, you can only choose different colors
+              </span>
+            )}
             {showLimitPopup && colors.length > 3 && (
               <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-400 border-b-2 border-red-500'>
                 Sorry, you can only create a 3 colors palette
@@ -256,9 +288,11 @@ export function Counter() {
               </button>
             </div>
           </div>
-          {count != 0 ? (
+          {count !== 0 || colors.length > 0 ? (
             <button
-              onClick={handleHexToRgb}
+              onClick={() => {
+                handleHexToRgb()
+              }}
               className='flex relative max-w-fit text-sm after:absolute after:top after:left hover:after:content-[""] 
                 after:border-b after:border-transparent hover:after:translate-x-6 hover:after:-left-6 hover:after:duration-500 
                 after:w-60 hover:after:h-6 hover:after:border-neutral-300'>
