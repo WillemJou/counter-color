@@ -122,7 +122,7 @@ export function Counter() {
         ? setColor(rgbToHex(color))
         : null
     }
-
+    ;('test')
     const changeCodeColors = () => {
       toggleCodeColor && colors.includes(hex)
         ? setColors(colors.map((v) => hexToRgb(v.replace(hex, ''))))
