@@ -27,7 +27,6 @@ export function Counter() {
   let [toggleCodeColor, setToggleCodeColor] = useState(
     color.includes('#') ? false : true
   )
-  console.log(toggleCodeColor)
   const [palette, setPalette] = useState(
     JSON.parse(localStorage.getItem('palette') || '[]')
   )
@@ -87,11 +86,10 @@ export function Counter() {
       : navigator.clipboard.writeText(JSON.stringify(color))
   }
 
-  const removeColor = (e, children) => {
-    const id = e.target.id
-    id.includes(children)
-      ? setColors(colors.filter((el) => el !== children))
-      : []
+  const removeColor = (index) => {
+    const list = [...colors]
+    list.splice(index, 1)
+    setColors(list)
   }
 
   const changeRandomColor = () => {
@@ -196,11 +194,11 @@ export function Counter() {
           </div>
 
           <div className=' relative flex justify-center'>
-            {colors.includes('color') && showLimitPopup && (
+            {/* {colors.includes('color') && showLimitPopup && (
               <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-400 border-b-2 border-red-500'>
                 Sorry, you can only choose different colors
               </span>
-            )}
+            )} */}
             {showLimitPopup && colors.length > 3 && (
               <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-400 border-b-2 border-red-500'>
                 Sorry, you can only create a 3 colors palette
@@ -233,13 +231,13 @@ export function Counter() {
               {/* refacto code */}
               {colors.map((children, index) => (
                 <div
-                  id={children}
+                  id={index + children}
                   key={index + 'container' + children}
                   className='flex justify-between'
                   style={{ backgroundColor: children }}>
                   <span
                     key={index + 'copyIcon' + children}
-                    id={children.key}
+                    id={index}
                     className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
                      hover:after:inline-block hover:after:w-3'
                     onClick={(e) => handleCopy(e)}>
@@ -254,9 +252,9 @@ export function Counter() {
                   )}
                   <button
                     key={index + 'closeBtn' + children}
-                    id={children}
+                    id={index + children}
                     className='p-2'
-                    onClick={(e) => removeColor(e, children)}>
+                    onClick={() => removeColor(index, children)}>
                     x
                   </button>
                 </div>
