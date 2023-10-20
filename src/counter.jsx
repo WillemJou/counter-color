@@ -8,21 +8,29 @@ import {
   rgbToHex,
 } from './utils'
 
-// Refacto le code en épurant la partie fonction et state du composant
+// Refacto le code en épurant la partie fonction et hooks du composant
+// Atomiser Counter !
 
 export function Counter() {
   // use state HOOKS
 
+  const [stop, setStop] = useState(false)
   const [count, setCount] = useState(0)
-  let [color, setColor] = useState(randomHexa)
+
+  let [color, setColor] = useState(
+    JSON.parse(sessionStorage.getItem('color') || '[]')
+  )
   let [colors, setColors] = useState(
     JSON.parse(sessionStorage.getItem('colors') || '[]')
   )
+
+  let [toggleCodeColor, setToggleCodeColor] = useState(
+    color.includes('#') ? false : true
+  )
+  console.log(toggleCodeColor)
   const [palette, setPalette] = useState(
     JSON.parse(localStorage.getItem('palette') || '[]')
   )
-  const [toggleCodeColor, setToggleCodeColor] = useState(false)
-  const [stop, setStop] = useState(false)
   const [showCopiedPopup, setShowCopiedPopup] = useState(false)
   const [showLimitPopup, setShowLimitPopup] = useState(false)
 
@@ -47,7 +55,7 @@ export function Counter() {
       setShowLimitPopup(false)
     }, 2500)
   }
-  // PK les fonctions fonctionnent seulement dans le scope globale ???
+
   maximumLength(colors)
 
   const handleLimit = () => {
@@ -98,6 +106,9 @@ export function Counter() {
   }
 
   // use effect HOOKS
+  useEffect(() => {
+    sessionStorage.setItem('color', JSON.stringify(color))
+  }, [handleAddOne, handleSubtractOne])
 
   useEffect(() => {
     sessionStorage.setItem('colors', JSON.stringify(colors))
@@ -109,33 +120,15 @@ export function Counter() {
 
   useEffect(() => {
     const hex = '#'
-    const rgb = 'rgb'
-
-    const changeCodeColor = () => {
-      toggleCodeColor && color.includes(hex)
-        ? setColor(hexToRgb(color.replace(hex, '')))
-        : toggleCodeColor && color.includes(rgb)
-        ? setColor(rgbToHex(color))
-        : !toggleCodeColor && color.includes(hex)
-        ? setColor(hexToRgb(color.replace(hex, '')))
-        : !toggleCodeColor && color.includes(rgb)
-        ? setColor(rgbToHex(color))
-        : null
-    }
-    ;('test')
     const changeCodeColors = () => {
-      toggleCodeColor && colors.includes(hex)
+      toggleCodeColor
+        ? setColor(hexToRgb(color.toString().replace(hex, '')))
+        : setColor(rgbToHex(color))
+      toggleCodeColor && colors.map((i) => i.includes(hex))
         ? setColors(colors.map((v) => hexToRgb(v.replace(hex, ''))))
-        : toggleCodeColor && colors.includes(rgb)
-        ? setColors(colors.map((v) => rgbToHex(v)))
-        : !toggleCodeColor && colors.includes(hex)
-        ? setColors(colors.map((v) => hexToRgb(v.replace(hex, ''))))
-        : !toggleCodeColor && colors.includes(rgb)
-        ? setColors(colors.map((v) => rgbToHex(v)))
-        : null
+        : setColors(colors.map((v) => rgbToHex(v)))
     }
-
-    stop ? (changeCodeColors(), changeCodeColor()) : null
+    stop ? changeCodeColors() : null
   }, [toggleCodeColor])
 
   return (
