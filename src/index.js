@@ -3,18 +3,20 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import Route from './routes'
-import { Counter } from './counter'
+import { MainPage } from './counter-color'
 import { PalletsPage } from './palletsPage'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <Route path='/'>
-      <Counter />
-    </Route>
-    <Route path='/pallets'>
-      <PalletsPage />
-    </Route>
+    <div className='bg-white text-black dark:bg-black dark:text-white h-screen'>
+      <Route path='/'>
+        <MainPage />
+      </Route>
+      <Route path='/pallets'>
+        <PalletsPage />
+      </Route>
+    </div>
   </React.StrictMode>
 )
 
