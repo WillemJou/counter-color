@@ -1,5 +1,6 @@
 import React from 'react'
 import { Copy } from './copy'
+
 export function Palette(props) {
   return (
     <div className='flex flex-col justify-center mb-8'>
@@ -8,7 +9,6 @@ export function Palette(props) {
           className={`${
             props.colors.length > 2 ? 'w-11/12' : 'w-full'
           } flex flex-col ease-out duration-500`}>
-          {/* refacto code */}
           {props.colors.map((children, index) => (
             <div
               id={index + children}
@@ -19,7 +19,7 @@ export function Palette(props) {
                 key={index + 'copyIcon' + children}
                 id={index}
                 className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
-                   hover:after:inline-block hover:after:w-3'
+                  hover:after:inline-block hover:after:w-3'
                 onClick={(e) => props.handleCopy(e, children)}>
                 {children}
               </span>
@@ -48,7 +48,9 @@ export function Palette(props) {
                 ? 'text-opacity-100 duration-0'
                 : 'text-transparent'
             } relative ease-out h-full p-2`}
-            onClick={() => props.handleAddPalette()}>
+            onClick={() => {
+              props.handleAddPalette(), props.handleOpenModal()
+            }}>
             Would you save this palette ?
           </button>
         </div>

@@ -13,15 +13,17 @@ import { Color } from './color'
 import { Palette } from './paletteForMainPage'
 import { SwitchColorCodeButton } from './switchColorCodeButton'
 import { ResetButton } from './resetButton'
+import { Modal } from './modal'
 
-// Refacto le code en épurant la partie fonction et hooks du composant
 // Atomiser Counter !
 
 export function MainPage() {
-  // use state HOOKS
-
-  const [stop, setStop] = useState(false)
+  const [codeColor, setcodeColor] = useState(false)
   const [count, setCount] = useState(0)
+  const [openModal, setOpenModal] = useState(false)
+  const [name, setName] = useState(
+    JSON.parse(localStorage.getItem('paletteName') || '[]')
+  )
 
   let [color, setColor] = useState(
     JSON.parse(sessionStorage.getItem('color') || '[]')
@@ -42,18 +44,30 @@ export function MainPage() {
   const handleAddColor = () => {
     setColors([...colors, color])
   }
+
   const handleAddPalette = () => {
     setPalette([...palette, ...colors])
     setCount(0)
     sessionStorage.clear()
     setColors([])
   }
+
+  const handleAddPaletteName = (event) => {
+    setName(name)
+    setName(event.target.value)
+  }
+
+  const handleOpenModal = () => {
+    setOpenModal(true)
+  }
+
   const handleShowCopiedPopup = () => {
     setShowCopiedPopup(true)
     setTimeout(() => {
       setShowCopiedPopup(false)
     }, 1000)
   }
+
   const handleShowLimitPopup = () => {
     setShowLimitPopup(true)
     setTimeout(() => {
@@ -81,7 +95,7 @@ export function MainPage() {
   }
 
   const handleHexToRgb = () => {
-    setStop(true)
+    setcodeColor(true)
     setToggleCodeColor(!toggleCodeColor)
   }
 
@@ -123,6 +137,10 @@ export function MainPage() {
   }, [handleAddPalette])
 
   useEffect(() => {
+    localStorage.setItem('paletteName', JSON.stringify(name))
+  }, [handleAddPaletteName])
+
+  useEffect(() => {
     const hex = '#'
     const changeCodeColors = () => {
       toggleCodeColor
@@ -132,7 +150,7 @@ export function MainPage() {
         ? setColors(colors.map((v) => hexToRgb(v.replace(hex, ''))))
         : setColors(colors.map((v) => rgbToHex(v)))
     }
-    stop ? changeCodeColors() : null
+    codeColor ? changeCodeColors() : null
   }, [toggleCodeColor])
 
   return (
@@ -177,6 +195,7 @@ export function MainPage() {
         <Palette
           removeColor={removeColor}
           colors={colors}
+          handleOpenModal={handleOpenModal}
           handleAddPalette={handleAddPalette}
           showCopiedPopup={showCopiedPopup}
         />
@@ -190,6 +209,15 @@ export function MainPage() {
           <ResetButton resetCounter={resetCounter} />
         </div>
       </div>
+      <Modal
+        isOpen={openModal}
+        name={name}
+        handleAddPaletteName={handleAddPaletteName}
+        onClose={() => {
+          setOpenModal(false)
+          return true
+        }}
+      />
     </>
   )
 }

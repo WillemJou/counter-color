@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Link from './link'
 
 export const PalletsPage = () => {
+  const paletteName = localStorage.getItem('paletteName')
+
   /**
    * The `group` function takes an array of items and a number `n`, and returns a new array where the
    * items are grouped into subarrays of size `n`.
@@ -13,7 +15,8 @@ export const PalletsPage = () => {
       return acc
     }, [])
 
-  const [deletePallette, setDeletePallete] = useState(
+  // Now we set the palette State based on LS and pack in
+  const [palette, setPalette] = useState(
     localStorage.length == 0
       ? []
       : group(JSON.parse(localStorage.getItem('palette')), 3)
@@ -22,12 +25,12 @@ export const PalletsPage = () => {
   const removePalette = (e, children) => {
     let id = e.target.id
     id.includes(children)
-      ? setDeletePallete(deletePallette.filter((el) => el !== children))
+      ? setPalette(palette.filter((el) => el !== children))
       : []
   }
 
   useEffect(() => {
-    const flatGroupArr = deletePallette.flat()
+    const flatGroupArr = palette.flat()
 
     localStorage.setItem('updatePalette', JSON.stringify(flatGroupArr))
 
@@ -54,10 +57,10 @@ export const PalletsPage = () => {
           </span>
         </Link>
         {localStorage.palette != '[]'
-          ? deletePallette.map((children, index) => (
+          ? palette.map((children, index) => (
               <div className='my-5 border rounded-sm' key={index}>
                 <div className='flex px-2 justify-between text-lg'>
-                  palette {index + 1}
+                  {paletteName}
                   <button
                     id={children}
                     onClick={(e) => removePalette(e, children)}>
