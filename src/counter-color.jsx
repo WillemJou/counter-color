@@ -22,7 +22,7 @@ export function MainPage() {
   const [count, setCount] = useState(0)
   const [openModal, setOpenModal] = useState(false)
   const [name, setName] = useState(
-    JSON.parse(localStorage.getItem('paletteName') || '[]')
+    JSON.parse(sessionStorage.getItem('paletteName') || '[]')
   )
 
   let [color, setColor] = useState(
@@ -137,7 +137,7 @@ export function MainPage() {
   }, [handleAddPalette])
 
   useEffect(() => {
-    localStorage.setItem('paletteName', JSON.stringify(name))
+    sessionStorage.setItem('paletteName', JSON.stringify(name))
   }, [handleAddPaletteName])
 
   useEffect(() => {
@@ -196,7 +196,6 @@ export function MainPage() {
           removeColor={removeColor}
           colors={colors}
           handleOpenModal={handleOpenModal}
-          handleAddPalette={handleAddPalette}
           showCopiedPopup={showCopiedPopup}
         />
         {count !== 0 || colors.length > 0 ? (
@@ -211,7 +210,9 @@ export function MainPage() {
       </div>
       <Modal
         isOpen={openModal}
+        handleAddPalette={handleAddPalette}
         name={name}
+        setName={setName}
         handleAddPaletteName={handleAddPaletteName}
         onClose={() => {
           setOpenModal(false)

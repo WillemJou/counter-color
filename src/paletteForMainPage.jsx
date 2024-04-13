@@ -49,7 +49,7 @@ export function Palette(props) {
                 : 'text-transparent'
             } relative ease-out h-full p-2`}
             onClick={() => {
-              props.handleAddPalette(), props.handleOpenModal()
+              props.handleOpenModal()
             }}>
             Would you save this palette ?
           </button>

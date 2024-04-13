@@ -4,6 +4,15 @@ export function Modal(props) {
   if (!props.isOpen) {
     return null
   }
+  /**
+   * The `noEventBtn` packing functions that closes modal, adds new palette and re-init name state.
+   */
+  const EventBtn = () => {
+    props.onClose()
+    props.handleAddPalette()
+    props.setName('')
+  }
+
   return (
     <dialog
       open
@@ -22,11 +31,12 @@ export function Modal(props) {
         <div className='p-2.5 border-y-2'>
           <input
             type='text'
-            onChange={props.handleAddPaletteName}
+            onChange={(e) => props.handleAddPaletteName(e)}
             value={props.name}
             className='w-full'></input>
         </div>
-        <footer className='relative flex items-end p-2.5 truncat'></footer>
+        <button onClick={() => EventBtn()}>No</button>
+        <button onClick={() => EventBtn()}>Yes</button>
       </section>
     </dialog>
   )
