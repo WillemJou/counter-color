@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react'
 import Link from './link'
 
 export const PalletsPage = () => {
-  const paletteName = localStorage.getItem('paletteName')
-
   /**
    * The `group` function takes an array of items and a number `n`, and returns a new array where the
    * items are grouped into subarrays of size `n`.
@@ -21,6 +19,13 @@ export const PalletsPage = () => {
       ? []
       : group(JSON.parse(localStorage.getItem('palette')), 3)
   )
+  const names = JSON.parse(localStorage.getItem('name'))
+
+  // Merge both arrays (names ---> keys, palette ---> values)
+  const paletteWithNames = names.reduce((acc, currentValue, index) => {
+    acc[currentValue] = palette[index]
+    return acc
+  }, {})
 
   const removePalette = (e, children) => {
     let id = e.target.id
@@ -56,11 +61,12 @@ export const PalletsPage = () => {
             Back to counter
           </span>
         </Link>
-        {localStorage.palette != '[]'
-          ? palette.map((children, index) => (
+        {localStorage.palette !== '[]' &&
+        Object.keys(paletteWithNames).length > 0
+          ? Object.entries(paletteWithNames).map(([name, children], index) => (
               <div className='my-5 border rounded-sm' key={index}>
                 <div className='flex px-2 justify-between text-lg'>
-                  {paletteName}
+                  {name}
                   <button
                     id={children}
                     onClick={(e) => removePalette(e, children)}>

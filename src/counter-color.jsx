@@ -21,10 +21,12 @@ export function MainPage() {
   const [codeColor, setcodeColor] = useState(false)
   const [count, setCount] = useState(0)
   const [openModal, setOpenModal] = useState(false)
-  const [name, setName] = useState(
-    JSON.parse(sessionStorage.getItem('paletteName') || '[]')
+  const [provisionalName, setProvisionalName] = useState(
+    JSON.parse(sessionStorage.getItem('provisionalName') || '[]')
   )
-
+  const [name, setName] = useState(
+    JSON.parse(localStorage.getItem('name') || '[]')
+  )
   let [color, setColor] = useState(
     JSON.parse(sessionStorage.getItem('color') || '[]')
   )
@@ -46,15 +48,16 @@ export function MainPage() {
   }
 
   const handleAddPalette = () => {
-    setPalette([...palette, ...colors])
+    const spreadColor = [...palette, ...colors]
+    setPalette(spreadColor)
+    setName([...name, provisionalName])
     setCount(0)
-    sessionStorage.clear()
     setColors([])
   }
 
   const handleAddPaletteName = (event) => {
-    setName(name)
-    setName(event.target.value)
+    setProvisionalName(provisionalName)
+    setProvisionalName(event.target.value)
   }
 
   const handleOpenModal = () => {
@@ -137,8 +140,12 @@ export function MainPage() {
   }, [handleAddPalette])
 
   useEffect(() => {
-    sessionStorage.setItem('paletteName', JSON.stringify(name))
+    sessionStorage.setItem('provisionalName', JSON.stringify(provisionalName))
   }, [handleAddPaletteName])
+
+  useEffect(() => {
+    localStorage.setItem('name', JSON.stringify(name))
+  }, [handleAddPalette])
 
   useEffect(() => {
     const hex = '#'
@@ -211,8 +218,8 @@ export function MainPage() {
       <Modal
         isOpen={openModal}
         handleAddPalette={handleAddPalette}
-        name={name}
-        setName={setName}
+        provisionalName={provisionalName}
+        setProvisionalName={setProvisionalName}
         handleAddPaletteName={handleAddPaletteName}
         onClose={() => {
           setOpenModal(false)

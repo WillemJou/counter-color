@@ -10,7 +10,7 @@ export function Modal(props) {
   const EventBtn = () => {
     props.onClose()
     props.handleAddPalette()
-    props.setName('')
+    props.setProvisionalName('')
   }
 
   useEffect(() => {
@@ -40,11 +40,11 @@ export function Modal(props) {
             x
           </button>
         </header>
-        <div className='m-2.5 border-y-2'>
+        <div className='m-2.5 border-t-2'>
           <input
             type='text'
             onChange={(e) => props.handleAddPaletteName(e)}
-            value={props.name}
+            value={props.provisionalName}
             className='w-full'></input>
         </div>
         <div className='flex justify-center gap-x-3.5 mb-1'>
