@@ -19,7 +19,10 @@ export const PalletsPage = () => {
       ? []
       : group(JSON.parse(localStorage.getItem('palette')), 3)
   )
-  const names = JSON.parse(localStorage.getItem('name'))
+
+  const [names, setNames] = useState(
+    localStorage.length == 0 ? [] : JSON.parse(localStorage.getItem('names'))
+  )
 
   // Merge both arrays (names ---> keys, palette ---> values)
   const paletteWithNames = names.reduce((acc, currentValue, index) => {
@@ -27,10 +30,13 @@ export const PalletsPage = () => {
     return acc
   }, {})
 
-  const removePalette = (e, children) => {
+  const removePalette = (e, children, name) => {
     let id = e.target.id
     id.includes(children)
-      ? setPalette(palette.filter((el) => el !== children))
+      ? (setPalette(
+          Object.values(paletteWithNames).filter((el) => el !== children)
+        ),
+        setNames(Object.keys(paletteWithNames).filter((el) => el !== name)))
       : []
   }
 
@@ -38,16 +44,22 @@ export const PalletsPage = () => {
     const flatGroupArr = palette.flat()
 
     localStorage.setItem('updatePalette', JSON.stringify(flatGroupArr))
+    localStorage.setItem('updateNames', JSON.stringify(names))
 
     const newPalette = JSON.parse(localStorage.getItem('updatePalette'))
+    const newNames = JSON.parse(localStorage.getItem('updateNames'))
 
     localStorage.removeItem('palette')
+    localStorage.removeItem('names')
 
     localStorage.setItem('palette', JSON.stringify(newPalette))
+    localStorage.setItem('names', JSON.stringify(newNames))
 
     localStorage.removeItem('updatePalette')
+    localStorage.removeItem('updateNames')
 
     JSON.parse(localStorage.getItem('palette'))
+    JSON.parse(localStorage.getItem('names'))
   }, [removePalette])
 
   return (
@@ -69,12 +81,13 @@ export const PalletsPage = () => {
                   {name}
                   <button
                     id={children}
-                    onClick={(e) => removePalette(e, children)}>
+                    onClick={(e) => removePalette(e, children, name)}>
                     x
                   </button>
                 </div>
                 <div key={index}>
-                  {children != []
+                  {console.log(children)}
+                  {children !== undefined
                     ? children.map((x, i) => (
                         <div
                           key={i}

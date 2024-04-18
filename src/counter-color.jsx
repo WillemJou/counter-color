@@ -24,8 +24,8 @@ export function MainPage() {
   const [provisionalName, setProvisionalName] = useState(
     JSON.parse(sessionStorage.getItem('provisionalName') || '[]')
   )
-  const [name, setName] = useState(
-    JSON.parse(localStorage.getItem('name') || '[]')
+  const [names, setNames] = useState(
+    JSON.parse(localStorage.getItem('names') || '[]')
   )
   let [color, setColor] = useState(
     JSON.parse(sessionStorage.getItem('color') || '[]')
@@ -50,7 +50,7 @@ export function MainPage() {
   const handleAddPalette = () => {
     const spreadColor = [...palette, ...colors]
     setPalette(spreadColor)
-    setName([...name, provisionalName])
+    setNames([...names, provisionalName])
     setCount(0)
     setColors([])
   }
@@ -144,7 +144,7 @@ export function MainPage() {
   }, [handleAddPaletteName])
 
   useEffect(() => {
-    localStorage.setItem('name', JSON.stringify(name))
+    localStorage.setItem('names', JSON.stringify(names))
   }, [handleAddPalette])
 
   useEffect(() => {
