@@ -73,8 +73,7 @@ export const PalletsPage = () => {
             Back to counter
           </span>
         </Link>
-        {localStorage.palette !== '[]' &&
-        Object.keys(paletteWithNames).length > 0
+        {localStorage.palette !== '[]'
           ? Object.entries(paletteWithNames).map(([name, children], index) => (
               <div className='my-5 border rounded-sm' key={index}>
                 <div className='flex px-2 justify-between text-lg'>
@@ -86,7 +85,6 @@ export const PalletsPage = () => {
                   </button>
                 </div>
                 <div key={index}>
-                  {console.log(children)}
                   {children !== undefined
                     ? children.map((x, i) => (
                         <div

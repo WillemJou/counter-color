@@ -55,7 +55,7 @@ export function MainPage() {
     setColors([])
   }
 
-  const handleAddPaletteName = (event) => {
+  const handleAddProvisionalName = (event) => {
     setProvisionalName(provisionalName)
     setProvisionalName(event.target.value)
   }
@@ -141,7 +141,7 @@ export function MainPage() {
 
   useEffect(() => {
     sessionStorage.setItem('provisionalName', JSON.stringify(provisionalName))
-  }, [handleAddPaletteName])
+  }, [handleAddProvisionalName])
 
   useEffect(() => {
     localStorage.setItem('names', JSON.stringify(names))
@@ -159,6 +159,19 @@ export function MainPage() {
     }
     codeColor ? changeCodeColors() : null
   }, [toggleCodeColor])
+
+  useEffect(() => {
+    const renameEmptyString = names.map((element, index) => {
+      if (element === '') {
+        return `unamed palette ${index + 1}`
+      } else {
+        return element
+      }
+    })
+    setNames(renameEmptyString) // Update state with renamed names only on effect
+    const namesJSONString = JSON.stringify(renameEmptyString)
+    localStorage.setItem('names', namesJSONString)
+  }, [names.length])
 
   return (
     <>
@@ -218,9 +231,10 @@ export function MainPage() {
       <Modal
         isOpen={openModal}
         handleAddPalette={handleAddPalette}
+        names={names}
         provisionalName={provisionalName}
         setProvisionalName={setProvisionalName}
-        handleAddPaletteName={handleAddPaletteName}
+        handleAddProvisionalName={handleAddProvisionalName}
         onClose={() => {
           setOpenModal(false)
           return true

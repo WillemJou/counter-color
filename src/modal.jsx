@@ -4,13 +4,19 @@ export function Modal(props) {
   if (!props.isOpen) {
     return null
   }
-  /**
-   * The `noEventBtn` packing functions that closes modal, adds new palette and re-init name state.
-   */
-  const EventBtn = () => {
+
+  // a real error must be implemented
+  const yesEventBtn = () => {
+    props.provisionalName.length === 0
+      ? alert('You must choose a name')
+      : (props.onClose(),
+        props.handleAddPalette(),
+        props.setProvisionalName(''))
+  }
+
+  const noEventBtn = () => {
     props.onClose()
     props.handleAddPalette()
-    props.setProvisionalName('')
   }
 
   useEffect(() => {
@@ -43,19 +49,19 @@ export function Modal(props) {
         <div className='m-2.5 border-t-2'>
           <input
             type='text'
-            onChange={(e) => props.handleAddPaletteName(e)}
+            onChange={(e) => props.handleAddProvisionalName(e)}
             value={props.provisionalName}
             className='w-full'></input>
         </div>
         <div className='flex justify-center gap-x-3.5 mb-1'>
           <button
             className='p-1 border border-slate-400'
-            onClick={() => EventBtn()}>
+            onClick={() => yesEventBtn()}>
             Yes
           </button>
           <button
             className='p-1 border border-slate-400'
-            onClick={() => EventBtn()}>
+            onClick={() => noEventBtn()}>
             No
           </button>
         </div>
