@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Error } from './error'
 
 export function Modal(props) {
-  // a real error must be implemented
+  const [showError, setShowError] = useState(false)
+
   const yesEventBtn = () => {
-    props.provisionalName.length === 0
-      ? alert('You must choose a name')
-      : (props.onClose(),
-        props.handleAddPalette(),
-        props.setProvisionalName(''))
+    if (props.provisionalName.length === 0) {
+      setShowError(true)
+      return // Prevent further execution if there's an error
+    } else {
+      props.onClose(), props.handleAddPalette(), props.setProvisionalName('')
+    }
   }
 
   const noEventBtn = () => {
@@ -52,6 +55,9 @@ export function Modal(props) {
             onChange={(e) => props.handleAddProvisionalName(e)}
             value={props.provisionalName}
             className='w-full'></input>
+          {showError && (
+            <Error errorName='You cannot click Yes without choosing a name ' />
+          )}
         </div>
         <div className='flex justify-center gap-x-3.5 mb-1'>
           <button
