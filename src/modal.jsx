@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react'
 
 export function Modal(props) {
-  if (!props.isOpen) {
-    return null
-  }
-
   // a real error must be implemented
   const yesEventBtn = () => {
     props.provisionalName.length === 0
@@ -28,6 +24,10 @@ export function Modal(props) {
     window.addEventListener('keydown', keyListener)
     return () => window.removeEventListener('keydown', keyListener)
   }, [])
+
+  if (!props.isOpen) {
+    return null
+  }
 
   return (
     <dialog
