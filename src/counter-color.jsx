@@ -84,11 +84,6 @@ export function MainPage() {
     handleShowLimitPopup()
   }
 
-  const handleCopy = (e, children) => {
-    handleShowCopiedPopup()
-    copyColorText(e, children, setColors(colors))
-  }
-
   const handleSubtractOne = () => {
     setCount(count - 1)
   }
@@ -102,9 +97,14 @@ export function MainPage() {
     setToggleCodeColor(!toggleCodeColor)
   }
 
-  const copyColorText = (e, children) => {
-    let id = e.target.id
-    id === children
+  const handleCopy = (children) => {
+    handleShowCopiedPopup()
+    copyColorText(children, setColors(colors))
+  }
+
+  const copyColorText = (children) => {
+    console.log(children)
+    children
       ? navigator.clipboard.writeText(JSON.stringify(children))
       : navigator.clipboard.writeText(JSON.stringify(color))
   }
@@ -216,6 +216,7 @@ export function MainPage() {
           removeColor={removeColor}
           colors={colors}
           handleOpenModal={handleOpenModal}
+          copy={handleCopy}
           showCopiedPopup={showCopiedPopup}
         />
         {count !== 0 || colors.length > 0 ? (

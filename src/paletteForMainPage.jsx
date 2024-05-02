@@ -20,7 +20,7 @@ export function Palette(props) {
                 id={index}
                 className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
                   hover:after:inline-block hover:after:w-3'
-                onClick={(e) => props.handleCopy(e, children)}>
+                onClick={() => props.copy(children)}>
                 {children}
               </span>
               <div>{props.showCopiedPopup ? <Copy /> : null}</div>

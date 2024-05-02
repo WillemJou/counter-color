@@ -7,7 +7,7 @@ export function Counter(props) {
         <span className='text-8xl'>{props.count}</span>
         <div className='flex whitespace-nowrap'>
           <span
-            onClick={(e) => props.copy(e)}
+            onClick={() => props.copy()}
             className={`${
               props.count !== 0
                 ? ' after:whitespace-pre after:w-3 after:ml-2 after:inline-block after:content-[url("/src/pics/copy-solid.svg")] after:opacity-0 hover:after:opacity-100'
