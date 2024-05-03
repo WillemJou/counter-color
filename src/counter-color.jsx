@@ -6,6 +6,7 @@ import {
   randomHexa,
   randomRgb,
   rgbToHex,
+  copyColorText,
 } from './utils'
 import { LinkToPalletsPage } from './linkToPalletsPage'
 import { Counter } from './counter'
@@ -14,6 +15,7 @@ import { Palette } from './paletteForMainPage'
 import { SwitchColorCodeButton } from './switchColorCodeButton'
 import { ResetButton } from './resetButton'
 import { Modal } from './modal'
+import { useCopy } from './hooks/useCopy'
 
 // Atomiser Counter !
 
@@ -21,6 +23,12 @@ export function MainPage() {
   const [codeColor, setcodeColor] = useState(false)
   const [count, setCount] = useState(0)
   const [openModal, setOpenModal] = useState(false)
+  const {
+    showCopiedPopup,
+    showLimitPopup,
+    handleShowCopiedPopup,
+    handleShowLimitPopup,
+  } = useCopy()
   const [provisionalName, setProvisionalName] = useState(
     JSON.parse(sessionStorage.getItem('provisionalName') || '[]')
   )
@@ -40,8 +48,6 @@ export function MainPage() {
   const [palette, setPalette] = useState(
     JSON.parse(localStorage.getItem('palette') || '[]')
   )
-  const [showCopiedPopup, setShowCopiedPopup] = useState(false)
-  const [showLimitPopup, setShowLimitPopup] = useState(false)
 
   const handleAddColor = () => {
     setColors([...colors, color])
@@ -64,25 +70,7 @@ export function MainPage() {
     setOpenModal(true)
   }
 
-  const handleShowCopiedPopup = () => {
-    setShowCopiedPopup(true)
-    setTimeout(() => {
-      setShowCopiedPopup(false)
-    }, 1000)
-  }
-
-  const handleShowLimitPopup = () => {
-    setShowLimitPopup(true)
-    setTimeout(() => {
-      setShowLimitPopup(false)
-    }, 2500)
-  }
-
   maximumLength(colors)
-
-  const handleLimit = () => {
-    handleShowLimitPopup()
-  }
 
   const handleSubtractOne = () => {
     setCount(count - 1)
@@ -95,18 +83,6 @@ export function MainPage() {
   const handleHexToRgb = () => {
     setcodeColor(true)
     setToggleCodeColor(!toggleCodeColor)
-  }
-
-  const handleCopy = (children) => {
-    handleShowCopiedPopup()
-    copyColorText(children, setColors(colors))
-  }
-
-  const copyColorText = (children) => {
-    console.log(children)
-    children
-      ? navigator.clipboard.writeText(JSON.stringify(children))
-      : navigator.clipboard.writeText(JSON.stringify(color))
   }
 
   const removeColor = (index) => {
@@ -124,6 +100,17 @@ export function MainPage() {
     setColors([])
     setToggleCodeColor(false)
     sessionStorage.clear()
+  }
+
+  // Copy code color handler
+
+  const handleCopy = (children) => {
+    handleShowCopiedPopup()
+    copyColorText(children, setColors(colors))
+  }
+
+  const handleLimit = () => {
+    handleShowLimitPopup()
   }
 
   // use effect HOOKS

@@ -4,6 +4,12 @@ const maximumLength = (item) => {
   item.splice(3, 1)
 }
 
+const copyColorText = (children, color) => {
+  children
+    ? navigator.clipboard.writeText(JSON.stringify(children))
+    : navigator.clipboard.writeText(JSON.stringify(color))
+}
+
 const randomHexa = () => '#' + Math.floor(Math.random() * 16777215).toString(16)
 
 const hexToRgb = (hex) => {
@@ -26,4 +32,11 @@ const rgbToHex = (rgb) => {
   return hexaCode
 }
 
-export { maximumLength, randomHexa, randomRgb, hexToRgb, rgbToHex }
+export {
+  maximumLength,
+  randomHexa,
+  randomRgb,
+  hexToRgb,
+  rgbToHex,
+  copyColorText,
+}

@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import { copyColorText } from './utils'
+import { useCopy } from './hooks/useCopy'
+import { Copy } from './copy'
 import Link from './link'
 
 export const PalletsPage = () => {
+  const { handleShowCopiedPopup, handleShowLimitPopup, showCopiedPopup } =
+    useCopy()
+
   /**
    * The `group` function takes an array of items and a number `n`, and returns a new array where the
    * items are grouped into subarrays of size `n`.
@@ -38,6 +44,15 @@ export const PalletsPage = () => {
         ),
         setNames(Object.keys(paletteWithNames).filter((el) => el !== name)))
       : []
+  }
+
+  const handleCopy = (children) => {
+    handleShowCopiedPopup()
+    copyColorText(children)
+  }
+
+  const handleLimit = () => {
+    handleShowLimitPopup()
   }
 
   useEffect(() => {
@@ -91,10 +106,17 @@ export const PalletsPage = () => {
                           key={i}
                           style={{ backgroundColor: codeColor }}
                           className='py-2 px-2'>
-                          <span className='text-sm'>{codeColor}</span>
+                          <span
+                            onClick={() => {
+                              handleCopy(codeColor), handleLimit()
+                            }}
+                            className='text-sm cursor-pointer after:whitespace-pre after:w-3 after:ml-2 after:inline-block after:content-[url("/src/pics/copy-solid.svg")] after:opacity-0 hover:after:opacity-100'>
+                            {codeColor}
+                          </span>
                         </div>
                       ))
                     : null}
+                  <div>{showCopiedPopup ? <Copy /> : null}</div>
                 </div>
               </div>
             ))
