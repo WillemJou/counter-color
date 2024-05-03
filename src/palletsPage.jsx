@@ -75,7 +75,7 @@ export const PalletsPage = () => {
         </Link>
         {localStorage.palette !== '[]'
           ? Object.entries(paletteWithNames).map(([name, children], index) => (
-              <div className='my-5 border rounded-sm' key={index}>
+              <div className='shadow-2xl my-5 border rounded-sm' key={index}>
                 <div className='flex px-2 justify-between text-lg'>
                   {name}
                   <button
@@ -86,12 +86,12 @@ export const PalletsPage = () => {
                 </div>
                 <div key={index}>
                   {children !== undefined
-                    ? children.map((x, i) => (
+                    ? children.map((codeColor, i) => (
                         <div
                           key={i}
-                          style={{ backgroundColor: x }}
+                          style={{ backgroundColor: codeColor }}
                           className='py-2 px-2'>
-                          <span>{x}</span>
+                          <span className='text-sm'>{codeColor}</span>
                         </div>
                       ))
                     : null}

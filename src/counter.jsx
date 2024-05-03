@@ -27,14 +27,14 @@ export function Counter(props) {
       </div>
       <div className='flex space-x-4 text-5xl mt-9'>
         <button
-          className='rounded-xl p-1 transform duration-700 border border-transparent hover:border hover:border-neutral-300'
+          className='p-1 shadow-md transform duration-700 border border-transparent hover:border hover:border-neutral-300'
           onClick={() => {
             props.handleSubtractOne(), props.changeRandomColor()
           }}>
           -1
         </button>
         <button
-          className='rounded-xl p-1 transform duration-700 border border-transparent hover:border hover:border-neutral-300'
+          className='p-1 shadow-md transform duration-700 border border-transparent hover:border hover:border-neutral-300'
           onClick={() => {
             props.handleAddOne(), props.changeRandomColor()
           }}>

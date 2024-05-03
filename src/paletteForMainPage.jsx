@@ -3,7 +3,10 @@ import { Copy } from './copy'
 
 export function Palette(props) {
   return (
-    <div className='flex flex-col justify-center mb-8'>
+    <div
+      className={`${
+        props.colors.length ? 'shadow-md' : ''
+      } flex flex-col justify-center mb-8`}>
       <div className='flex justify-between'>
         <div
           className={`${
@@ -18,7 +21,7 @@ export function Palette(props) {
               <span
                 key={index + 'copyIcon' + children}
                 id={index}
-                className='p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
+                className='text-sm p-2 cursor-pointer hover:after:ml-2 hover:after:content-[url("/src/pics/copy-solid.svg")]
                   hover:after:inline-block hover:after:w-3'
                 onClick={() => props.copy(children)}>
                 {children}
@@ -38,7 +41,7 @@ export function Palette(props) {
         <div
           className={`${
             props.colors.length > 2
-              ? 'w-44 rounded-sm opacity-100 duration-300 hover:border hover:duration-700'
+              ? 'w-44 opacity-100 duration-300 hover:border hover:duration-700'
               : 'w-0 opacity-0'
           } flex items-center relative ease-out  `}>
           <button
@@ -47,7 +50,7 @@ export function Palette(props) {
               props.colors.length > 2
                 ? 'text-opacity-100 duration-0'
                 : 'text-transparent'
-            } relative ease-out h-full p-2`}
+            } shadow-md relative ease-out h-full p-2`}
             onClick={() => {
               props.handleOpenModal()
             }}>

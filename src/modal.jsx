@@ -61,7 +61,7 @@ export function Modal(props) {
         </div>
         <div className='flex justify-center gap-x-3.5 mb-1'>
           <button
-            className='p-1 border border-slate-400'
+            className=' p-1 border border-slate-400'
             onClick={() => yesEventBtn()}>
             Yes
           </button>
