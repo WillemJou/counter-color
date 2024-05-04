@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import {
-  hexToRgb,
-  maximumLength,
-  randomHexa,
-  randomRgb,
-  rgbToHex,
-  copyColorText,
-} from './utils'
+import { maximumLength, copyColorText } from './utils'
 import { LinkToPalletsPage } from './linkToPalletsPage'
 import { Counter } from './counter'
 import { Color } from './color'
@@ -16,11 +9,11 @@ import { SwitchColorCodeButton } from './switchColorCodeButton'
 import { ResetButton } from './resetButton'
 import { Modal } from './modal'
 import { useCopy } from './hooks/useCopy'
+import { useCodeColor } from './hooks/useCodeColor'
 
 // Atomiser Counter !
 
 export function MainPage() {
-  const [codeColor, setcodeColor] = useState(false)
   const [count, setCount] = useState(0)
   const [openModal, setOpenModal] = useState(false)
   const {
@@ -42,9 +35,13 @@ export function MainPage() {
     JSON.parse(sessionStorage.getItem('colors') || '[]')
   )
 
-  let [toggleCodeColor, setToggleCodeColor] = useState(
-    color.includes('#') ? false : true
-  )
+  const {
+    changeRandomColor,
+    setcodeColor,
+    setToggleCodeColor,
+    toggleCodeColor,
+  } = useCodeColor(color, setColor, colors, setColors)
+
   const [palette, setPalette] = useState(
     JSON.parse(localStorage.getItem('palette') || '[]')
   )
@@ -91,10 +88,6 @@ export function MainPage() {
     setColors(list)
   }
 
-  const changeRandomColor = () => {
-    toggleCodeColor ? setColor(randomRgb()) : setColor(randomHexa())
-  }
-
   const resetCounter = () => {
     setCount(0)
     setColors([])
@@ -114,6 +107,7 @@ export function MainPage() {
   }
 
   // use effect HOOKS
+
   useEffect(() => {
     sessionStorage.setItem('color', JSON.stringify(color))
   }, [handleAddOne, handleSubtractOne])
@@ -133,19 +127,6 @@ export function MainPage() {
   useEffect(() => {
     localStorage.setItem('names', JSON.stringify(names))
   }, [handleAddPalette])
-
-  useEffect(() => {
-    const hex = '#'
-    const changeCodeColors = () => {
-      toggleCodeColor
-        ? setColor(hexToRgb(color.toString().replace(hex, '')))
-        : setColor(rgbToHex(color))
-      toggleCodeColor && colors.map((i) => i.includes(hex))
-        ? setColors(colors.map((v) => hexToRgb(v.replace(hex, ''))))
-        : setColors(colors.map((v) => rgbToHex(v)))
-    }
-    codeColor ? changeCodeColors() : null
-  }, [toggleCodeColor])
 
   useEffect(() => {
     const renameEmptyString = names.map((element, index) => {
