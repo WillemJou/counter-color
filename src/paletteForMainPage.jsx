@@ -1,5 +1,4 @@
 import React from 'react'
-import { Copy } from './copy'
 
 export function Palette(props) {
   return (
@@ -26,7 +25,6 @@ export function Palette(props) {
                 onClick={() => props.copy(children)}>
                 {children}
               </span>
-              <div>{props.showCopiedPopup ? <Copy /> : null}</div>
               <button
                 key={index + 'closeBtn' + children}
                 id={index + children}

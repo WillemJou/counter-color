@@ -10,6 +10,7 @@ import { ResetButton } from './resetButton'
 import { Modal } from './modal'
 import { useCopy } from './hooks/useCopy'
 import { useCodeColor } from './hooks/useCodeColor'
+import { Copy } from './copy'
 
 // Atomiser Counter !
 
@@ -76,6 +77,8 @@ export function MainPage() {
   const handleAddOne = () => {
     setCount(count + 1)
   }
+
+  // Change code color handler
 
   const handleHexToRgb = () => {
     setcodeColor(true)
@@ -185,7 +188,6 @@ export function MainPage() {
           colors={colors}
           handleOpenModal={handleOpenModal}
           copy={handleCopy}
-          showCopiedPopup={showCopiedPopup}
         />
         {count !== 0 || colors.length > 0 ? (
           <SwitchColorCodeButton
@@ -197,6 +199,7 @@ export function MainPage() {
           <ResetButton resetCounter={resetCounter} />
         </div>
       </div>
+      <div>{showCopiedPopup ? <Copy /> : null}</div>
       <Modal
         isOpen={openModal}
         handleAddPalette={handleAddPalette}
