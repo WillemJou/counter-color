@@ -11,11 +11,11 @@ import { Modal } from './modal'
 import { useCopy } from './hooks/useCopy'
 import { useCodeColor } from './hooks/useCodeColor'
 import { Copy } from './copy'
+import { useCount } from './hooks/useCount'
 
 // Atomiser Counter !
 
 export function MainPage() {
-  const [count, setCount] = useState(0)
   const [openModal, setOpenModal] = useState(false)
   const {
     showCopiedPopup,
@@ -23,6 +23,7 @@ export function MainPage() {
     handleShowCopiedPopup,
     handleShowLimitPopup,
   } = useCopy()
+  const { count, setCount, handleAddOne, handleSubtractOne } = useCount()
   const [provisionalName, setProvisionalName] = useState(
     JSON.parse(sessionStorage.getItem('provisionalName') || '[]')
   )
@@ -69,14 +70,6 @@ export function MainPage() {
   }
 
   maximumLength(colors)
-
-  const handleSubtractOne = () => {
-    setCount(count - 1)
-  }
-
-  const handleAddOne = () => {
-    setCount(count + 1)
-  }
 
   // Change code color handler
 
@@ -164,11 +157,11 @@ export function MainPage() {
               }>
               <Counter
                 count={count}
+                handleAddOne={handleAddOne}
+                handleSubtractOne={handleSubtractOne}
                 color={color}
                 colors={colors}
                 showLimitPopup={showLimitPopup}
-                handleAddOne={handleAddOne}
-                handleSubtractOne={handleSubtractOne}
                 changeRandomColor={changeRandomColor}
                 copy={handleCopy}
               />
@@ -182,7 +175,6 @@ export function MainPage() {
             ) : null}
           </div>
         </div>
-
         <Palette
           removeColor={removeColor}
           colors={colors}
