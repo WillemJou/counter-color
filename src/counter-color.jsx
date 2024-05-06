@@ -12,6 +12,7 @@ import { useCopy } from './hooks/useCopy'
 import { useCodeColor } from './hooks/useCodeColor'
 import { Copy } from './copy'
 import { useCount } from './hooks/useCount'
+import { useProvisionalName } from './hooks/useProvisionalName'
 
 // Atomiser Counter !
 
@@ -24,9 +25,7 @@ export function MainPage() {
     handleShowLimitPopup,
   } = useCopy()
   const { count, setCount, handleAddOne, handleSubtractOne } = useCount()
-  const [provisionalName, setProvisionalName] = useState(
-    JSON.parse(sessionStorage.getItem('provisionalName') || '[]')
-  )
+
   const [names, setNames] = useState(
     JSON.parse(localStorage.getItem('names') || '[]')
   )
@@ -36,6 +35,9 @@ export function MainPage() {
   let [colors, setColors] = useState(
     JSON.parse(sessionStorage.getItem('colors') || '[]')
   )
+
+  const { provisionalName, setProvisionalName, handleAddProvisionalName } =
+    useProvisionalName()
 
   const {
     changeRandomColor,
@@ -58,11 +60,6 @@ export function MainPage() {
     setNames([...names, provisionalName])
     setCount(0)
     setColors([])
-  }
-
-  const handleAddProvisionalName = (event) => {
-    setProvisionalName(provisionalName)
-    setProvisionalName(event.target.value)
   }
 
   const handleOpenModal = () => {
@@ -115,10 +112,6 @@ export function MainPage() {
   useEffect(() => {
     localStorage.setItem('palette', JSON.stringify(palette))
   }, [handleAddPalette])
-
-  useEffect(() => {
-    sessionStorage.setItem('provisionalName', JSON.stringify(provisionalName))
-  }, [handleAddProvisionalName])
 
   useEffect(() => {
     localStorage.setItem('names', JSON.stringify(names))

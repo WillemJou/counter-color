@@ -9,5 +9,5 @@ export const useCount = () => {
   const handleAddOne = () => {
     setCount(count + 1)
   }
-  return { count, handleAddOne, handleSubtractOne }
+  return { count, setCount, handleAddOne, handleSubtractOne }
 }

@@ -16,6 +16,7 @@ export function Modal(props) {
   const noEventBtn = () => {
     props.onClose()
     props.handleAddPalette()
+    props.setProvisionalName('')
   }
 
   useEffect(() => {
