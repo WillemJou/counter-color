@@ -13,6 +13,7 @@ import { useCodeColor } from './hooks/useCodeColor'
 import { Copy } from './copy'
 import { useCount } from './hooks/useCount'
 import { useProvisionalName } from './hooks/useProvisionalName'
+import { useName } from './hooks/useName'
 
 // Atomiser Counter !
 
@@ -26,9 +27,6 @@ export function MainPage() {
   } = useCopy()
   const { count, setCount, handleAddOne, handleSubtractOne } = useCount()
 
-  const [names, setNames] = useState(
-    JSON.parse(localStorage.getItem('names') || '[]')
-  )
   let [color, setColor] = useState(
     JSON.parse(sessionStorage.getItem('color') || '[]')
   )
@@ -38,6 +36,8 @@ export function MainPage() {
 
   const { provisionalName, setProvisionalName, handleAddProvisionalName } =
     useProvisionalName()
+
+  const { names, setNames } = useName()
 
   const {
     changeRandomColor,
@@ -116,19 +116,6 @@ export function MainPage() {
   useEffect(() => {
     localStorage.setItem('names', JSON.stringify(names))
   }, [handleAddPalette])
-
-  useEffect(() => {
-    const renameEmptyString = names.map((element, index) => {
-      if (element === '') {
-        return `unamed palette ${index + 1}`
-      } else {
-        return element
-      }
-    })
-    setNames(renameEmptyString) // Update state with renamed names only on effect
-    const namesJSONString = JSON.stringify(renameEmptyString)
-    localStorage.setItem('names', namesJSONString)
-  }, [names.length])
 
   return (
     <>
