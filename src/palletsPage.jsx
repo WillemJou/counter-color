@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { copyColorText } from './utils'
 import { useCopy } from './hooks/useCopy'
+import { useName } from './hooks/useName'
+import { useProvisionalName } from './hooks/useProvisionalName'
 import { Copy } from './copy'
 import Link from './link'
 
 export const PalletsPage = () => {
+  // CUSTOM HOOKS
   const { handleShowCopiedPopup, handleShowLimitPopup, showCopiedPopup } =
     useCopy()
+  const { names, setNames } = useName()
+  const { provisionalName, setProvisionalName, handleAddProvisionalName } =
+    useProvisionalName()
+  const [selectedName, setSelectedName] = useState(null) // Track currently selected palette name
 
   /**
    * The `group` function takes an array of items and a number `n`, and returns a new array where the
@@ -26,15 +33,28 @@ export const PalletsPage = () => {
       : group(JSON.parse(localStorage.getItem('palette')), 3)
   )
 
-  const [names, setNames] = useState(
-    localStorage.length == 0 ? [] : JSON.parse(localStorage.getItem('names'))
-  )
-
   // Merge both arrays (names ---> keys, palette ---> values)
   const paletteWithNames = names.reduce((acc, currentValue, index) => {
     acc[currentValue] = palette[index]
     return acc
   }, {})
+
+  const selectName = (name) => {
+    setSelectedName(name)
+  }
+
+  const handleNewName = () => {
+    const nameIndex = names.indexOf(selectedName) // Find the index of the selected name
+
+    setProvisionalName('')
+    nameIndex > -1
+      ? setNames([
+          ...names.slice(0, nameIndex), // Copy elements before the selected name
+          provisionalName, // Update with the new name
+          ...names.slice(nameIndex + 1), // Copy elements after the selected name
+        ])
+      : null
+  }
 
   const removePalette = (e, children, name) => {
     let id = e.target.id
@@ -45,7 +65,6 @@ export const PalletsPage = () => {
         setNames(Object.keys(paletteWithNames).filter((el) => el !== name)))
       : []
   }
-
   const handleCopy = (children) => {
     handleShowCopiedPopup()
     copyColorText(children)
@@ -75,7 +94,7 @@ export const PalletsPage = () => {
 
     JSON.parse(localStorage.getItem('palette'))
     JSON.parse(localStorage.getItem('names'))
-  }, [removePalette])
+  }, [removePalette, palette])
 
   return (
     <>
@@ -92,7 +111,19 @@ export const PalletsPage = () => {
           ? Object.entries(paletteWithNames).map(([name, children], index) => (
               <div className='shadow-2xl my-5 border rounded-sm' key={index}>
                 <div className='flex px-2 justify-between text-lg'>
-                  {name}
+                  <button onClick={() => selectName(name)}>{name}</button>
+                  {selectedName === name && ( // Only display input when the name matches
+                    <>
+                      <input
+                        type='text'
+                        id={name}
+                        placeholder={name}
+                        className='absolute'
+                        onChange={(e) => handleAddProvisionalName(e)}
+                      />
+                      <button onClick={handleNewName}>Valid New Name</button>
+                    </>
+                  )}
                   <button
                     id={children}
                     onClick={(e) => removePalette(e, children, name)}>
