@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { copyColorText } from './utils'
 import { useCopy } from './hooks/useCopy'
 import { useName } from './hooks/useName'
 import { useProvisionalName } from './hooks/useProvisionalName'
 import { Copy } from './copy'
 import Link from './link'
+import { Error } from './error'
 
 export const PalletsPage = () => {
   // CUSTOM HOOKS
@@ -14,6 +15,8 @@ export const PalletsPage = () => {
   const { provisionalName, setProvisionalName, handleAddProvisionalName } =
     useProvisionalName()
   const [selectedName, setSelectedName] = useState(null) // Track currently selected palette name
+  const [isError, setIsError] = useState(false)
+  const ref = useRef(null)
 
   /**
    * The `group` function takes an array of items and a number `n`, and returns a new array where the
@@ -43,17 +46,23 @@ export const PalletsPage = () => {
     setSelectedName(name)
   }
 
-  const handleNewName = () => {
+  const handleNewName = (name) => {
     const nameIndex = names.indexOf(selectedName) // Find the index of the selected name
-
+    if (!names.includes(provisionalName) && nameIndex > -1) {
+      setNames([
+        ...names.slice(0, nameIndex), // Copy elements before the selected name
+        provisionalName, // Update with the new name
+        ...names.slice(nameIndex + 1), // Copy elements after the selected name
+      ])
+    }
+    if (names.includes(provisionalName) && name === selectedName) {
+      setIsError(true)
+      ref.current.value = ''
+      setTimeout(() => {
+        setIsError(false)
+      }, 5000)
+    }
     setProvisionalName('')
-    nameIndex > -1
-      ? setNames([
-          ...names.slice(0, nameIndex), // Copy elements before the selected name
-          provisionalName, // Update with the new name
-          ...names.slice(nameIndex + 1), // Copy elements after the selected name
-        ])
-      : null
   }
 
   const removePalette = (e, children, name) => {
@@ -65,6 +74,7 @@ export const PalletsPage = () => {
         setNames(Object.keys(paletteWithNames).filter((el) => el !== name)))
       : []
   }
+
   const handleCopy = (children) => {
     handleShowCopiedPopup()
     copyColorText(children)
@@ -110,18 +120,26 @@ export const PalletsPage = () => {
         {localStorage.palette !== '[]'
           ? Object.entries(paletteWithNames).map(([name, children], index) => (
               <div className='shadow-2xl my-5 border rounded-sm' key={index}>
+                {isError && (
+                  <Error errorName='You cannot use the same name than another palette' />
+                )}
                 <div className='flex px-2 justify-between text-lg'>
-                  <button onClick={() => selectName(name)}>{name}</button>
+                  <button onClick={() => selectName(name)}>
+                    {name ? name : `unamed palette ${index + 1}`}
+                  </button>
                   {selectedName === name && ( // Only display input when the name matches
                     <>
                       <input
                         type='text'
+                        ref={ref}
                         id={name}
                         placeholder={name}
                         className='absolute'
                         onChange={(e) => handleAddProvisionalName(e)}
                       />
-                      <button onClick={handleNewName}>Valid New Name</button>
+                      <button onClick={() => handleNewName(name)}>
+                        Valid New Name
+                      </button>
                     </>
                   )}
                   <button

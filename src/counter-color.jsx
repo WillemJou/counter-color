@@ -15,8 +15,6 @@ import { useCount } from './hooks/useCount'
 import { useProvisionalName } from './hooks/useProvisionalName'
 import { useName } from './hooks/useName'
 
-// Atomiser Counter !
-
 export function MainPage() {
   const [openModal, setOpenModal] = useState(false)
   const {
