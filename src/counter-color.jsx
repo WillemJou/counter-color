@@ -14,8 +14,10 @@ import { Copy } from './copy'
 import { useCount } from './hooks/useCount'
 import { useProvisionalName } from './hooks/useProvisionalName'
 import { useName } from './hooks/useName'
+import { useColors } from './hooks/useColors'
 
 export function MainPage() {
+  const { color, colors, setColor, setColors } = useColors()
   const [openModal, setOpenModal] = useState(false)
   const {
     showCopiedPopup,
@@ -24,13 +26,6 @@ export function MainPage() {
     handleShowLimitPopup,
   } = useCopy()
   const { count, setCount, handleAddOne, handleSubtractOne } = useCount()
-
-  let [color, setColor] = useState(
-    JSON.parse(sessionStorage.getItem('color') || '[]')
-  )
-  let [colors, setColors] = useState(
-    JSON.parse(sessionStorage.getItem('colors') || '[]')
-  )
 
   const { provisionalName, setProvisionalName, handleAddProvisionalName } =
     useProvisionalName()

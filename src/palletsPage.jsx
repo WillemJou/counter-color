@@ -14,6 +14,7 @@ export const PalletsPage = () => {
   const { names, setNames } = useName()
   const { provisionalName, setProvisionalName, handleAddProvisionalName } =
     useProvisionalName()
+
   const [selectedName, setSelectedName] = useState(null) // Track currently selected palette name
   const [isError, setIsError] = useState(false)
   const ref = useRef(null)
